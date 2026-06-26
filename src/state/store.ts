@@ -61,6 +61,7 @@ export interface Store {
   isWordSaved: (term: string) => boolean;
   exportState: () => string;
   importState: (json: string) => boolean;
+  resetDay: (day: number) => void;
   resetAll: () => void;
 }
 
@@ -270,6 +271,18 @@ export function useStore(): Store {
     [state],
   );
 
+  const resetDay = useCallback(
+    (day: number) =>
+      setState((s) => {
+        const key = `${s.language}-${day}`;
+        if (!s.progress[key]) return s;
+        const progress = { ...s.progress };
+        delete progress[key];
+        return { ...s, progress };
+      }),
+    [setState],
+  );
+
   const importState = useCallback(
     (json: string) => {
       try {
@@ -305,6 +318,7 @@ export function useStore(): Store {
     isWordSaved,
     exportState,
     importState,
+    resetDay,
     resetAll: reset,
   };
 }

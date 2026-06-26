@@ -4,10 +4,12 @@ import {
   Languages,
   Monitor,
   Moon,
+  RotateCcw,
   Settings2,
   Sun,
 } from "lucide-react";
 import type { LanguageCode, ThemeMode, UiLang } from "../data/types";
+import { TOTAL_DAYS } from "../data/types";
 import type { Store } from "../state/store";
 import { UI_LANGS } from "../i18n/strings";
 import { Segmented, cn } from "./ui";
@@ -15,6 +17,7 @@ import { Segmented, cn } from "./ui";
 export function SettingsMenu({ store }: { store: Store }) {
   const { state, t } = store;
   const [open, setOpen] = useState(false);
+  const [resetMsg, setResetMsg] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -131,6 +134,25 @@ export function SettingsMenu({ store }: { store: Store }) {
               </span>
             </button>
           )}
+
+          {/* Reset the current day's progress */}
+          <div className="mt-3 border-t border-slate-200 pt-3 dark:border-slate-700">
+            <button
+              onClick={() => {
+                const day = Math.min(state.currentDay, TOTAL_DAYS);
+                store.resetDay(day);
+                setResetMsg(t("menu.resetDayDone", { day }));
+                setTimeout(() => setResetMsg(null), 2500);
+              }}
+              className="flex w-full items-center gap-2 rounded-xl px-1 py-1.5 text-sm text-rose-600 hover:bg-rose-50 dark:text-rose-400 dark:hover:bg-rose-500/10"
+            >
+              <RotateCcw size={15} />
+              {t("menu.resetDay", { day: Math.min(state.currentDay, TOTAL_DAYS) })}
+            </button>
+            {resetMsg && (
+              <p className="mt-1 px-1 text-xs text-emerald-600">{resetMsg}</p>
+            )}
+          </div>
         </div>
       )}
     </div>

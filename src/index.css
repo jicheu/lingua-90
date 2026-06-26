@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/*
+ * Tailwind v4 defaults the `dark:` variant to the prefers-color-scheme media
+ * query. We drive the theme with a `.dark` class on <html> (light/dark/auto),
+ * so override the variant to follow that class instead.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-display: "Georgia", "Songti SC", serif;
 }
