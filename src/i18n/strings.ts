@@ -1,0 +1,378 @@
+import type { UiLang } from "../data/types";
+
+/**
+ * Interface translations (en / fr / zh). The English record is the source of
+ * truth for the available keys; `t(key, vars)` does simple {name} interpolation.
+ */
+export type StringKey = keyof typeof en;
+
+const en = {
+  // nav / chrome
+  "nav.journey": "Journey",
+  "nav.words": "My Words",
+  "menu.settings": "Settings",
+  "menu.theme": "Theme",
+  "menu.theme.light": "Light",
+  "menu.theme.dark": "Dark",
+  "menu.theme.auto": "Auto",
+  "menu.interface": "Interface language",
+  "menu.learning": "Learning",
+  "footer.tagline": "A 90-day {lang} journey",
+  "footer.saved": "Progress is saved on this device — back it up from My Words.",
+  "lang.en": "English",
+  "lang.zh": "Chinese",
+
+  // dashboard
+  "dash.title": "Your {lang} journey",
+  "dash.subtitle": "Day {day} of 90 · {done} days completed",
+  "stat.streak": "Streak",
+  "stat.xp": "XP",
+  "stat.progress": "Progress",
+  "stat.badges": "Badges",
+  "dash.resume": "Pick up where you left off",
+  "dash.resumeDay": "Day {day} — 3 exercises await",
+  "dash.continue": "Continue",
+  "dash.achievements": "Achievements",
+  "dash.calendar": "90-day calendar",
+  "unit.days": "d",
+
+  // day view
+  "day.back": "Journey",
+  "day.title": "Day {day}",
+  "day.completed": "Completed",
+  "day.pickTopic": "Today's topic — choose what you'd like to explore:",
+  "day.pickPrompt": "Pick a topic above to unlock today's video and reading.",
+  "step.words": "Words",
+  "step.video": "Video",
+  "step.reading": "Reading",
+
+  // topics
+  "topic.history": "History",
+  "topic.philosophy": "Philosophy",
+  "topic.sport": "Sport",
+  "topic.science": "Science",
+  "topic.art": "Art",
+
+  // vocab
+  "vocab.title": "Exercise 1 · Learn 3 words",
+  "vocab.hint": "Tap a card to flip it. Tap the speaker to hear it.",
+  "vocab.flip": "flip",
+  "common.listen": "Listen",
+  "common.save": "Save",
+  "common.saved": "Saved",
+  "common.done": "Done",
+  "vocab.test": "Test yourself",
+  "vocab.again": "Practice the match-up again",
+  "vocab.matchTitle": "Match-up quiz",
+  "vocab.matchHint": "Tap a word, then tap its meaning. Match all three to continue.",
+  "vocab.reviewCards": "Review cards",
+  "vocab.perfect": "Perfect! Continue",
+  "vocab.matched": "{n} / {total} matched",
+
+  // video
+  "video.fallback":
+    "This video couldn't load (offline or unavailable). You can still read the transcript and mark the exercise complete.",
+  "video.openYoutube": "Open on YouTube",
+  "common.play": "Play",
+  "common.pause": "Pause",
+  "video.credit": "captions © their respective authors",
+  "video.hint":
+    "{duration} · Tap any word in the transcript to translate it (the video pauses automatically).",
+  "video.watched": "Watched",
+  "video.next": "Next: Reading",
+  "video.markWatched": "Mark watched · Continue",
+  "video.watchToEnd": "Watch to the end…",
+
+  // reading
+  "read.readAloud": "Read aloud",
+  "read.stop": "Stop",
+  "read.hint": "One page · Tap any word to see its meaning and hear it.",
+  "read.takeQuiz": "Take comprehension quiz",
+  "read.reviewQuiz": "Review comprehension quiz",
+  "read.quizTitle": "Comprehension check",
+  "read.backToText": "Back to text",
+  "read.score": "{correct}/{total} correct — review and try again",
+  "read.retry": "Retry",
+  "read.submit": "Submit answers",
+  "read.dayComplete": "Day complete!",
+  "read.dayCompleteMsg":
+    "You finished all three exercises. Your streak and XP are updated.",
+  "read.dayCompleteHint": "Head back to your journey to start the next day.",
+
+  // review hub
+  "review.title": "My Words",
+  "review.subtitle": "{n} saved {lang} words · practice them anytime.",
+  "review.empty":
+    "No saved words yet. Tap the star on any flashcard or translated word to collect it here.",
+  "review.practice": "Quick practice",
+  "review.reveal": "tap to reveal",
+  "review.hide": "tap to hide",
+  "review.next": "Next",
+  "review.shuffle": "Shuffle",
+  "backup.title": "Backup & sync across devices",
+  "backup.desc":
+    "Your progress lives in this browser. Export a backup file and import it on another device to continue there.",
+  "backup.export": "Export backup",
+  "backup.import": "Import backup",
+  "backup.reset": "Reset all",
+  "backup.confirm": "Erase everything?",
+  "common.yes": "Yes",
+  "common.no": "No",
+  "backup.exported": "Backup downloaded.",
+  "backup.restored": "Progress restored.",
+  "backup.badFile": "Could not read that backup file.",
+  "backup.wasReset": "All progress reset.",
+};
+
+const fr: Record<StringKey, string> = {
+  "nav.journey": "Parcours",
+  "nav.words": "Mes mots",
+  "menu.settings": "Réglages",
+  "menu.theme": "Thème",
+  "menu.theme.light": "Clair",
+  "menu.theme.dark": "Sombre",
+  "menu.theme.auto": "Auto",
+  "menu.interface": "Langue de l'interface",
+  "menu.learning": "Apprentissage",
+  "footer.tagline": "Un parcours de 90 jours en {lang}",
+  "footer.saved":
+    "La progression est enregistrée sur cet appareil — sauvegardez-la depuis Mes mots.",
+  "lang.en": "Anglais",
+  "lang.zh": "Chinois",
+
+  "dash.title": "Votre parcours en {lang}",
+  "dash.subtitle": "Jour {day} sur 90 · {done} jours terminés",
+  "stat.streak": "Série",
+  "stat.xp": "XP",
+  "stat.progress": "Progression",
+  "stat.badges": "Badges",
+  "dash.resume": "Reprenez où vous en étiez",
+  "dash.resumeDay": "Jour {day} — 3 exercices vous attendent",
+  "dash.continue": "Continuer",
+  "dash.achievements": "Réussites",
+  "dash.calendar": "Calendrier de 90 jours",
+  "unit.days": "j",
+
+  "day.back": "Parcours",
+  "day.title": "Jour {day}",
+  "day.completed": "Terminé",
+  "day.pickTopic": "Le thème du jour — choisissez ce que vous voulez explorer :",
+  "day.pickPrompt":
+    "Choisissez un thème ci-dessus pour débloquer la vidéo et la lecture du jour.",
+  "step.words": "Mots",
+  "step.video": "Vidéo",
+  "step.reading": "Lecture",
+
+  "topic.history": "Histoire",
+  "topic.philosophy": "Philosophie",
+  "topic.sport": "Sport",
+  "topic.science": "Science",
+  "topic.art": "Art",
+
+  "vocab.title": "Exercice 1 · Apprendre 3 mots",
+  "vocab.hint": "Touchez une carte pour la retourner. Touchez le haut-parleur pour l'écouter.",
+  "vocab.flip": "retourner",
+  "common.listen": "Écouter",
+  "common.save": "Enregistrer",
+  "common.saved": "Enregistré",
+  "common.done": "Fait",
+  "vocab.test": "Testez-vous",
+  "vocab.again": "Refaire l'association",
+  "vocab.matchTitle": "Quiz d'association",
+  "vocab.matchHint": "Touchez un mot, puis sa signification. Associez les trois pour continuer.",
+  "vocab.reviewCards": "Revoir les cartes",
+  "vocab.perfect": "Parfait ! Continuer",
+  "vocab.matched": "{n} / {total} associés",
+
+  "video.fallback":
+    "Cette vidéo n'a pas pu se charger (hors ligne ou indisponible). Vous pouvez lire la transcription et valider l'exercice.",
+  "video.openYoutube": "Ouvrir sur YouTube",
+  "common.play": "Lire",
+  "common.pause": "Pause",
+  "video.credit": "sous-titres © leurs auteurs respectifs",
+  "video.hint":
+    "{duration} · Touchez un mot de la transcription pour le traduire (la vidéo se met en pause).",
+  "video.watched": "Vu",
+  "video.next": "Suite : Lecture",
+  "video.markWatched": "Marquer comme vu · Continuer",
+  "video.watchToEnd": "Regardez jusqu'à la fin…",
+
+  "read.readAloud": "Lire à voix haute",
+  "read.stop": "Arrêter",
+  "read.hint": "Une page · Touchez un mot pour voir son sens et l'entendre.",
+  "read.takeQuiz": "Faire le quiz de compréhension",
+  "read.reviewQuiz": "Revoir le quiz de compréhension",
+  "read.quizTitle": "Vérification de compréhension",
+  "read.backToText": "Retour au texte",
+  "read.score": "{correct}/{total} correct — révisez et réessayez",
+  "read.retry": "Réessayer",
+  "read.submit": "Valider les réponses",
+  "read.dayComplete": "Jour terminé !",
+  "read.dayCompleteMsg":
+    "Vous avez fini les trois exercices. Votre série et vos XP sont mis à jour.",
+  "read.dayCompleteHint": "Retournez à votre parcours pour commencer le jour suivant.",
+
+  "review.title": "Mes mots",
+  "review.subtitle": "{n} mots {lang} enregistrés · révisez-les quand vous voulez.",
+  "review.empty":
+    "Aucun mot enregistré. Touchez l'étoile sur une carte ou un mot traduit pour le collecter ici.",
+  "review.practice": "Révision rapide",
+  "review.reveal": "toucher pour révéler",
+  "review.hide": "toucher pour masquer",
+  "review.next": "Suivant",
+  "review.shuffle": "Mélanger",
+  "backup.title": "Sauvegarde & synchronisation entre appareils",
+  "backup.desc":
+    "Votre progression est dans ce navigateur. Exportez un fichier et importez-le sur un autre appareil pour continuer.",
+  "backup.export": "Exporter la sauvegarde",
+  "backup.import": "Importer une sauvegarde",
+  "backup.reset": "Tout réinitialiser",
+  "backup.confirm": "Tout effacer ?",
+  "common.yes": "Oui",
+  "common.no": "Non",
+  "backup.exported": "Sauvegarde téléchargée.",
+  "backup.restored": "Progression restaurée.",
+  "backup.badFile": "Impossible de lire ce fichier de sauvegarde.",
+  "backup.wasReset": "Progression réinitialisée.",
+};
+
+const zh: Record<StringKey, string> = {
+  "nav.journey": "学习旅程",
+  "nav.words": "我的单词",
+  "menu.settings": "设置",
+  "menu.theme": "主题",
+  "menu.theme.light": "浅色",
+  "menu.theme.dark": "深色",
+  "menu.theme.auto": "自动",
+  "menu.interface": "界面语言",
+  "menu.learning": "学习语言",
+  "footer.tagline": "90 天{lang}学习之旅",
+  "footer.saved": "进度保存在本设备上 — 可在“我的单词”中备份。",
+  "lang.en": "英语",
+  "lang.zh": "中文",
+
+  "dash.title": "你的{lang}学习之旅",
+  "dash.subtitle": "第 {day} 天 / 共 90 天 · 已完成 {done} 天",
+  "stat.streak": "连续",
+  "stat.xp": "经验",
+  "stat.progress": "进度",
+  "stat.badges": "徽章",
+  "dash.resume": "继续上次的学习",
+  "dash.resumeDay": "第 {day} 天 — 3 个练习等着你",
+  "dash.continue": "继续",
+  "dash.achievements": "成就",
+  "dash.calendar": "90 天日历",
+  "unit.days": "天",
+
+  "day.back": "学习旅程",
+  "day.title": "第 {day} 天",
+  "day.completed": "已完成",
+  "day.pickTopic": "今天的主题 — 选择你想探索的内容：",
+  "day.pickPrompt": "在上方选择一个主题，解锁今天的视频和阅读。",
+  "step.words": "单词",
+  "step.video": "视频",
+  "step.reading": "阅读",
+
+  "topic.history": "历史",
+  "topic.philosophy": "哲学",
+  "topic.sport": "运动",
+  "topic.science": "科学",
+  "topic.art": "艺术",
+
+  "vocab.title": "练习一 · 学习 3 个单词",
+  "vocab.hint": "点击卡片翻面。点击喇叭收听发音。",
+  "vocab.flip": "翻面",
+  "common.listen": "收听",
+  "common.save": "收藏",
+  "common.saved": "已收藏",
+  "common.done": "完成",
+  "vocab.test": "测试一下",
+  "vocab.again": "再做一次配对",
+  "vocab.matchTitle": "配对测验",
+  "vocab.matchHint": "先点单词，再点它的意思。配对三个即可继续。",
+  "vocab.reviewCards": "复习卡片",
+  "vocab.perfect": "完美！继续",
+  "vocab.matched": "已配对 {n} / {total}",
+
+  "video.fallback": "视频无法加载（离线或不可用）。你仍可阅读文字稿并完成练习。",
+  "video.openYoutube": "在 YouTube 打开",
+  "common.play": "播放",
+  "common.pause": "暂停",
+  "video.credit": "字幕版权归各自作者所有",
+  "video.hint": "{duration} · 点击文字稿中的任意单词进行翻译（视频会自动暂停）。",
+  "video.watched": "已观看",
+  "video.next": "下一步：阅读",
+  "video.markWatched": "标记已看 · 继续",
+  "video.watchToEnd": "请看到结尾…",
+
+  "read.readAloud": "朗读",
+  "read.stop": "停止",
+  "read.hint": "一页 · 点击任意单词查看含义并收听。",
+  "read.takeQuiz": "进行理解测验",
+  "read.reviewQuiz": "复习理解测验",
+  "read.quizTitle": "理解检查",
+  "read.backToText": "返回文本",
+  "read.score": "答对 {correct}/{total} — 复习后再试",
+  "read.retry": "重试",
+  "read.submit": "提交答案",
+  "read.dayComplete": "今天完成了！",
+  "read.dayCompleteMsg": "你完成了全部三个练习。连续天数和经验已更新。",
+  "read.dayCompleteHint": "返回学习旅程，开始下一天。",
+
+  "review.title": "我的单词",
+  "review.subtitle": "已收藏 {n} 个{lang}单词 · 随时练习。",
+  "review.empty": "还没有收藏的单词。点击卡片或翻译词上的星标即可收藏。",
+  "review.practice": "快速练习",
+  "review.reveal": "点击显示",
+  "review.hide": "点击隐藏",
+  "review.next": "下一个",
+  "review.shuffle": "随机",
+  "backup.title": "备份与跨设备同步",
+  "backup.desc": "进度保存在此浏览器中。导出备份文件，在其他设备导入即可继续。",
+  "backup.export": "导出备份",
+  "backup.import": "导入备份",
+  "backup.reset": "重置全部",
+  "backup.confirm": "确定要清除全部？",
+  "common.yes": "是",
+  "common.no": "否",
+  "backup.exported": "备份已下载。",
+  "backup.restored": "进度已恢复。",
+  "backup.badFile": "无法读取该备份文件。",
+  "backup.wasReset": "进度已重置。",
+};
+
+const TABLES: Record<UiLang, Record<StringKey, string>> = { en, fr, zh };
+
+export type TFunc = (key: StringKey, vars?: Record<string, string | number>) => string;
+
+export function makeT(lang: UiLang): TFunc {
+  const table = TABLES[lang] ?? en;
+  return (key, vars) => {
+    let s = table[key] ?? en[key] ?? key;
+    if (vars) {
+      for (const [k, v] of Object.entries(vars)) {
+        s = s.replace(new RegExp(`\\{${k}\\}`, "g"), String(v));
+      }
+    }
+    return s;
+  };
+}
+
+export const UI_LANGS: { code: UiLang; label: string }[] = [
+  { code: "en", label: "English" },
+  { code: "fr", label: "Français" },
+  { code: "zh", label: "中文" },
+];
+
+/**
+ * Resolve a Localized value to the chosen interface language, falling back to
+ * English. Tolerates a plain string (legacy saved data) and missing keys.
+ */
+export function loc(
+  lang: UiLang,
+  value: Partial<Record<UiLang, string>> | string | undefined,
+): string {
+  if (value == null) return "";
+  if (typeof value === "string") return value;
+  return value[lang] ?? value.en ?? Object.values(value)[0] ?? "";
+}

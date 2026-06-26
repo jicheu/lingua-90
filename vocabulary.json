@@ -1,0 +1,5 @@
+{
+    "casual": ["yes/no", "please", "thankyou", "sorry", "hello", "goodbye", "nice"],
+    "professional": ["important", "urgent", "email", "report", "project", "deadline", "task", "meeting"],
+    "food_drink": ["eat", "drink", "restaurant", "hotel", "movie", "concert", "travel"]
+}	

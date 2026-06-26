@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Georgia", "Songti SC", serif;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Inter", "Noto Sans SC", sans-serif;
+}
+
+/* 3D flip card helpers (Tailwind v4 has no built-in transform-style utility) */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+.perspective {
+  perspective: 1200px;
+}
+
+/* Minimal, unobtrusive scrollbars */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 120, 140, 0.35) transparent;
+}
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 140, 0.3);
+  border-radius: 8px;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.96) translateY(2px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+.animate-pop {
+  animation: pop 0.18s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out both;
+}
