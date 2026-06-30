@@ -112,7 +112,7 @@ function LearnerApp({
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
       {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-slate-50/80 backdrop-blur-xl dark:border-slate-800/70 dark:bg-slate-950/80">
+      <header className="safe-area-top sticky top-0 z-30 border-b border-slate-200/70 bg-slate-50/80 backdrop-blur-xl dark:border-slate-800/70 dark:bg-slate-950/80">
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
           <button
             onClick={() => setView("dashboard")}
@@ -179,18 +179,12 @@ function LearnerApp({
       </main>
 
       {/* Mobile bottom nav */}
-      <nav className="sticky bottom-0 z-30 flex border-t border-slate-200 bg-slate-50/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90 sm:hidden">
+      <nav className="safe-area-bottom sticky bottom-0 z-30 flex border-t border-slate-200 bg-slate-50/90 backdrop-blur dark:border-slate-800 dark:bg-slate-950/90 sm:hidden">
         <MobileNav
           active={view === "dashboard"}
           onClick={() => setView("dashboard")}
           icon={<LayoutGrid size={18} />}
           label={t("nav.journey")}
-        />
-        <MobileNav
-          active={view === "review"}
-          onClick={() => setView("review")}
-          icon={<BookOpen size={18} />}
-          label={t("nav.words")}
         />
         <MobileNav
           active={view === "review"}
@@ -218,7 +212,6 @@ function LearnerApp({
           <Sparkles size={12} /> {t("footer.saved")}
         </p>
       </footer>
-      <ToastContainer />
     </div>
   );
 }

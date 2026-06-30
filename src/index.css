@@ -84,3 +84,12 @@ body {
 .animate-fade-in {
   animation: fade-in 0.3s ease-out both;
 }
+
+/* PWA safe-area helpers — push content below the iOS status bar and above the
+   home indicator when launched from the home screen (viewport-fit=cover). */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
