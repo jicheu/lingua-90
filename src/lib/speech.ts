@@ -111,6 +111,8 @@ function playClip(src: string): boolean {
   if (typeof Audio === "undefined") return false;
   try {
     if (!audioEl) audioEl = new Audio();
+    audioEl.onended = null;
+    audioEl.onerror = null;
     audioEl.src = src;
     audioEl.currentTime = 0;
     void audioEl.play();
@@ -120,12 +122,79 @@ function playClip(src: string): boolean {
   }
 }
 
+// Language codes accepted by the unofficial Google TTS endpoint.
+const TTS_LANG: Record<LanguageCode, string> = { en: "en", zh: "zh-CN" };
+// The endpoint only synthesises short snippets, so we cap the length.
+const TTS_MAX = 200;
+
+function googleTtsUrl(text: string, lang: LanguageCode): string {
+  const q = encodeURIComponent(text.slice(0, TTS_MAX));
+  return (
+    "https://translate.googleapis.com/translate_tts?ie=UTF-8&client=gtx" +
+    `&tl=${TTS_LANG[lang]}&q=${q}`
+  );
+}
+
+/**
+ * Play a sentence using the unofficial Google TTS endpoint. The MP3 is loaded
+ * straight into the shared <audio> element — media playback is not subject to
+ * CORS, so this works cross-origin without any special headers. Online only.
+ * `onEnd` fires when playback finishes (or fails), so callers can chain.
+ */
+function playRemoteTts(
+  text: string,
+  lang: LanguageCode,
+  opts?: { onEnd?: () => void },
+): boolean {
+  if (typeof Audio === "undefined") return false;
+  try {
+    if (!audioEl) audioEl = new Audio();
+    let fired = false;
+    const done = () => {
+      if (fired) return;
+      fired = true;
+      opts?.onEnd?.();
+    };
+    audioEl.onended = done;
+    audioEl.onerror = done;
+    audioEl.src = googleTtsUrl(text, lang);
+    audioEl.currentTime = 0;
+    void audioEl.play().catch(done);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Speak a sentence for the reading modes. Prefers the offline system voice
+ * when one exists; otherwise falls back to online Google TTS so audio (and the
+ * synchronised highlight that depends on `onEnd`) still works on devices with
+ * no speech engine — e.g. Chrome/Chromium on Linux.
+ */
+export function speakSentence(
+  text: string,
+  lang: LanguageCode,
+  opts?: { onEnd?: () => void },
+): boolean {
+  if (speak(text, lang, opts)) return true;
+  return playRemoteTts(text, lang, opts);
+}
+
+
 /**
  * Speak free-form text using the system voice. Must be called from within a
  * user gesture. Returns false if no system voice is available (the caller can
  * then decide to degrade gracefully).
+ *
+ * `opts.onEnd` fires once when the utterance finishes (or errors), which lets
+ * callers chain playback — e.g. advancing to the next sentence.
  */
-export function speak(text: string, lang: LanguageCode): boolean {
+export function speak(
+  text: string,
+  lang: LanguageCode,
+  opts?: { onEnd?: () => void },
+): boolean {
   const clean = text.trim();
   const s = synth();
   if (!clean || !s || !hasVoices()) return false;
@@ -141,6 +210,16 @@ export function speak(text: string, lang: LanguageCode): boolean {
   u.volume = 1;
   const v = pickVoice(lang);
   if (v) u.voice = v;
+  if (opts?.onEnd) {
+    let fired = false;
+    const done = () => {
+      if (fired) return;
+      fired = true;
+      opts.onEnd?.();
+    };
+    u.onend = done;
+    u.onerror = done;
+  }
   s.resume();
   s.speak(u);
   return true;

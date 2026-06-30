@@ -75,6 +75,9 @@ export function Translatable({
   );
 
   function handleClick(e: React.MouseEvent, token: string) {
+    // Stop the click from bubbling to wrappers (e.g. the sentence-by-sentence
+    // reader uses a parent click handler to start playback).
+    e.stopPropagation();
     const gloss = lookupWord(state.language, token);
     pronounce(token.replace(/[^\p{L}\p{N}]/gu, ""), state.language);
     if (!gloss) {
