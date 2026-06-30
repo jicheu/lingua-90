@@ -45,19 +45,39 @@ export async function listProfiles(): Promise<ProfileInfo[]> {
   }
 }
 
-/** Create a new open profile. Returns its id, or null on failure. */
+/** Generate a local-only profile id (used when no server is reachable). */
+function localId(): string {
+  try {
+    if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+      const bytes = crypto.getRandomValues(new Uint8Array(8));
+      return Array.from(bytes, (b) => (b % 36).toString(36)).join("");
+    }
+  } catch {
+    /* ignore */
+  }
+  return Math.random().toString(36).slice(2, 10).padEnd(8, "0");
+}
+
+/**
+ * Create a profile. Tries the server first; if it's unreachable (dev without
+ * the backend, or a static-only deploy) it falls back to a **local-only**
+ * profile so the learner can always get in — the app works entirely from
+ * localStorage, and will start syncing if a server later becomes available.
+ */
 export async function createProfile(name: string): Promise<ProfileInfo | null> {
+  const clean = name.trim();
+  if (!clean) return null;
   try {
     const res = await fetch(`${API}/users`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name: clean }),
     });
-    if (!res.ok) return null;
-    return (await res.json()) as ProfileInfo;
+    if (res.ok) return (await res.json()) as ProfileInfo;
   } catch {
-    return null;
+    /* fall through to a local profile */
   }
+  return { id: localId(), name: clean };
 }
 
 /** Load a profile's stored state, or null if missing / offline. */

@@ -51,6 +51,7 @@ export function ProfileGate({ onPick }: { onPick: (id: string) => void }) {
     const created = await createProfile(trimmed);
     setBusy(false);
     if (created) onPick(created.id);
+    else setCreating(true); // keep the form open so the user can retry
   }
 
   return (
