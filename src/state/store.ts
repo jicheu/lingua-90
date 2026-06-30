@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import type {
   AppState,
@@ -11,6 +11,7 @@ import type {
 } from "../data/types";
 import { TOTAL_DAYS } from "../data/types";
 import { makeT, type TFunc } from "../i18n/strings";
+import { loadState, saveState } from "../lib/profile";
 
 const STORAGE_KEY = "lingua90-state-v1";
 
@@ -18,6 +19,7 @@ const XP_PER_EXERCISE = 20;
 const XP_DAY_BONUS = 40;
 
 const initialState: AppState = {
+  name: "Learner",
   language: "en",
   uiLang: "en",
   showPinyin: true,
@@ -28,7 +30,20 @@ const initialState: AppState = {
   progress: {},
   savedWords: { en: [], zh: [] },
   badges: [],
+  updatedAt: 0,
 };
+
+/** Merge a (possibly partial) stored state onto the defaults. */
+function hydrate(partial: Partial<AppState> | null | undefined): AppState {
+  return {
+    ...initialState,
+    ...partial,
+    savedWords: {
+      en: partial?.savedWords?.en ?? [],
+      zh: partial?.savedWords?.zh ?? [],
+    },
+  };
+}
 
 function todayISO(): string {
   return new Date().toISOString().slice(0, 10);
@@ -50,6 +65,7 @@ export interface Store {
   isDayComplete: (day: number) => boolean;
   isDayUnlocked: (day: number) => boolean;
   completedCount: number;
+  setName: (name: string) => void;
   setLanguage: (lang: LanguageCode) => void;
   setUiLang: (lang: UiLang) => void;
   setThemeMode: (mode: ThemeMode) => void;
@@ -65,11 +81,62 @@ export interface Store {
   resetAll: () => void;
 }
 
-export function useStore(): Store {
+export function useStore(profileId?: string | null): Store {
   const [state, setState, reset] = useLocalStorage<AppState>(
-    STORAGE_KEY,
+    profileId ? `${STORAGE_KEY}-${profileId}` : STORAGE_KEY,
     initialState,
   );
+
+  /**
+   * Apply a mutation and stamp `updatedAt` so the server sync can do
+   * last-writer-wins. Every user-facing change goes through this.
+   */
+  const commit = useCallback(
+    (updater: (s: AppState) => AppState) =>
+      setState((s) => {
+        const next = updater(s);
+        return next === s ? s : { ...next, updatedAt: Date.now() };
+      }),
+    [setState],
+  );
+
+  // ── Server profile sync (no database; one JSON file per profile) ──
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const lastPushed = useRef(0);
+  const pushTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // On profile change: pull the server copy and adopt it if it's newer.
+  useEffect(() => {
+    if (!profileId) return;
+    let cancelled = false;
+    (async () => {
+      const remote = await loadState(profileId);
+      if (cancelled || !remote) return;
+      const remoteAt = remote.updatedAt ?? 0;
+      if (remoteAt >= (stateRef.current.updatedAt ?? 0)) {
+        setState(hydrate(remote));
+        lastPushed.current = remoteAt;
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [profileId, setState]);
+
+  // On local change: debounced push to the server.
+  useEffect(() => {
+    if (!profileId) return;
+    if (state.updatedAt <= lastPushed.current) return;
+    if (pushTimer.current) clearTimeout(pushTimer.current);
+    pushTimer.current = setTimeout(async () => {
+      const ok = await saveState(profileId, stateRef.current);
+      if (ok) lastPushed.current = stateRef.current.updatedAt;
+    }, 1200);
+    return () => {
+      if (pushTimer.current) clearTimeout(pushTimer.current);
+    };
+  }, [profileId, state.updatedAt]);
 
   const dayKey = useCallback(
     (day: number) => `${state.language}-${day}`,
@@ -108,28 +175,32 @@ export function useStore(): Store {
     [state.progress, state.language],
   );
 
+  const setName = useCallback(
+    (name: string) => commit((s) => ({ ...s, name: name.trim() || s.name })),
+    [commit],
+  );
   const setLanguage = useCallback(
-    (language: LanguageCode) => setState((s) => ({ ...s, language })),
-    [setState],
+    (language: LanguageCode) => commit((s) => ({ ...s, language })),
+    [commit],
   );
   const setUiLang = useCallback(
-    (uiLang: UiLang) => setState((s) => ({ ...s, uiLang })),
-    [setState],
+    (uiLang: UiLang) => commit((s) => ({ ...s, uiLang })),
+    [commit],
   );
   const setThemeMode = useCallback(
-    (themeMode: ThemeMode) => setState((s) => ({ ...s, themeMode })),
-    [setState],
+    (themeMode: ThemeMode) => commit((s) => ({ ...s, themeMode })),
+    [commit],
   );
   const togglePinyin = useCallback(
-    () => setState((s) => ({ ...s, showPinyin: !s.showPinyin })),
-    [setState],
+    () => commit((s) => ({ ...s, showPinyin: !s.showPinyin })),
+    [commit],
   );
 
   const t = useMemo(() => makeT(state.uiLang), [state.uiLang]);
 
   const setTopic = useCallback(
     (day: number, topic: TopicId) =>
-      setState((s) => {
+      commit((s) => {
         const key = `${s.language}-${day}`;
         const prev = s.progress[key] ?? {
           vocabDone: false,
@@ -138,12 +209,12 @@ export function useStore(): Store {
         };
         return { ...s, progress: { ...s.progress, [key]: { ...prev, topic } } };
       }),
-    [setState],
+    [commit],
   );
 
   const completeExercise = useCallback(
     (day: number, exKey: ExerciseKey) =>
-      setState((s) => {
+      commit((s) => {
         const key = `${s.language}-${day}`;
         const prev = s.progress[key] ?? {
           vocabDone: false,
@@ -225,12 +296,12 @@ export function useStore(): Store {
           badges: Array.from(badges),
         };
       }),
-    [setState],
+    [commit],
   );
 
   const saveWord = useCallback(
     (word: Word) =>
-      setState((s) => {
+      commit((s) => {
         const list = s.savedWords[s.language];
         if (list.some((w) => w.term === word.term)) return s;
         const savedWords = {
@@ -243,12 +314,12 @@ export function useStore(): Store {
         if (total >= 100) badges.add("words-100");
         return { ...s, savedWords, badges: Array.from(badges) };
       }),
-    [setState],
+    [commit],
   );
 
   const removeSavedWord = useCallback(
     (term: string) =>
-      setState((s) => ({
+      commit((s) => ({
         ...s,
         savedWords: {
           ...s.savedWords,
@@ -257,7 +328,7 @@ export function useStore(): Store {
           ),
         },
       })),
-    [setState],
+    [commit],
   );
 
   const isWordSaved = useCallback(
@@ -273,14 +344,14 @@ export function useStore(): Store {
 
   const resetDay = useCallback(
     (day: number) =>
-      setState((s) => {
+      commit((s) => {
         const key = `${s.language}-${day}`;
         if (!s.progress[key]) return s;
         const progress = { ...s.progress };
         delete progress[key];
         return { ...s, progress };
       }),
-    [setState],
+    [commit],
   );
 
   const importState = useCallback(
@@ -290,7 +361,7 @@ export function useStore(): Store {
         if (typeof parsed !== "object" || parsed === null) return false;
         // shallow sanity check
         if (!("progress" in parsed) || !("currentDay" in parsed)) return false;
-        setState({ ...initialState, ...parsed });
+        setState({ ...hydrate(parsed), updatedAt: Date.now() });
         return true;
       } catch {
         return false;
@@ -307,6 +378,7 @@ export function useStore(): Store {
     isDayComplete,
     isDayUnlocked,
     completedCount,
+    setName,
     setLanguage,
     setUiLang,
     setThemeMode,

@@ -5,3 +5,7 @@ dist
 .venv
 
 *.tsbuildinfo
+
+# Sync backend per-learner state (never commit user data)
+server/data
+.env

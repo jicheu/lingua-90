@@ -15,7 +15,7 @@
 
 import type { LanguageCode, TopicId, VideoLesson } from "./types";
 
-export const VIDEO_LESSONS: Record<LanguageCode, Record<TopicId, VideoLesson[]>> =
+export const VIDEO_LESSONS: Record<LanguageCode, Partial<Record<TopicId, VideoLesson[]>>> =
 {
   "en": {
     "history": [

@@ -7,6 +7,8 @@ export const TOPIC_META: TopicMeta[] = [
   { id: "sport", label: "Sport", emoji: "⚽" },
   { id: "science", label: "Science", emoji: "🔬" },
   { id: "art", label: "Art", emoji: "🎨" },
+  { id: "pedagogy", label: "Pedagogy", emoji: "📚" },
+  { id: "didactic", label: "Didactic", emoji: "🎓" },
 ];
 
 /**
@@ -228,6 +230,78 @@ const EN_TOPICS: Topic[] = [
       },
     ],
   },
+  {
+    id: "pedagogy",
+    label: "Pedagogy",
+    emoji: "📚",
+    lessons: [
+      {
+        video: {
+          title: "How people learn",
+          youtubeId: "8XCUNxQj0Sc",
+          duration: "5 min",
+          transcript: [
+            { start: 0, end: 35, text: "Pedagogy is the art and science of teaching." },
+            { start: 35, end: 85, text: "Good teachers help students understand, not just memorize." },
+            { start: 85, end: 140, text: "Asking questions is often more powerful than giving answers." },
+            { start: 140, end: 195, text: "People remember best when they connect ideas to real life." },
+            { start: 195, end: 250, text: "A kind and patient teacher can change a student's whole life." },
+            { start: 250, end: 300, text: "Learning is a journey that never really ends." },
+          ],
+        },
+        reading: {
+          title: "What Makes a Great Teacher?",
+          paragraphs: [
+            "Pedagogy is the study of how people learn and how teachers can help them. A great teacher does more than share facts; they guide students to think for themselves and to understand the world more deeply.",
+            "One powerful idea in pedagogy is that learners remember best when they are active. Instead of only listening, they ask questions, try things out, and connect new ideas to what they already know. This makes learning feel meaningful rather than mechanical.",
+            "Patience matters just as much as knowledge. Every student learns at a different pace, and a good teacher notices this and adjusts. A small word of encouragement at the right moment can give a learner the courage to keep going.",
+            "In the end, great teaching is about trust. When students feel safe to make mistakes and ask questions, real learning begins — and it can last a lifetime.",
+          ],
+          quiz: [
+            { question: { en: "What is pedagogy the study of?", fr: "De quoi la pédagogie est-elle l'étude ?", zh: "教育学是研究什么的？" }, options: [{ en: "How people learn and are taught", fr: "Comment on apprend et est enseigné", zh: "人如何学习与被教授" }, { en: "How to build machines", fr: "Comment construire des machines", zh: "如何制造机器" }, { en: "How to paint", fr: "Comment peindre", zh: "如何画画" }], answer: 0 },
+            { question: { en: "How do learners remember best, according to the text?", fr: "Comment les apprenants retiennent-ils le mieux, selon le texte ?", zh: "根据文章，学习者怎样记得最好？" }, options: [{ en: "By being active", fr: "En étant actifs", zh: "通过主动参与" }, { en: "By staying silent", fr: "En restant silencieux", zh: "保持沉默" }, { en: "By copying only", fr: "En recopiant seulement", zh: "只靠抄写" }], answer: 0 },
+            { question: { en: "What matters as much as knowledge in teaching?", fr: "Qu'est-ce qui compte autant que le savoir dans l'enseignement ?", zh: "教学中和知识同样重要的是什么？" }, options: [{ en: "Patience", fr: "La patience", zh: "耐心" }, { en: "Speed", fr: "La vitesse", zh: "速度" }, { en: "Money", fr: "L'argent", zh: "金钱" }], answer: 0 },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: "didactic",
+    label: "Didactic",
+    emoji: "🎓",
+    lessons: [
+      {
+        video: {
+          title: "Teaching with clear explanations",
+          youtubeId: "0XOWtwq4A6g",
+          duration: "5 min",
+          transcript: [
+            { start: 0, end: 35, text: "Didactic teaching means explaining things clearly and directly." },
+            { start: 35, end: 85, text: "A good explanation starts from what the learner already knows." },
+            { start: 85, end: 140, text: "Simple examples make difficult ideas easier to grasp." },
+            { start: 140, end: 195, text: "Stories and pictures can turn a hard lesson into a memorable one." },
+            { start: 195, end: 250, text: "The best lessons leave the learner curious to know more." },
+            { start: 250, end: 300, text: "Clear teaching respects the learner's time and attention." },
+          ],
+        },
+        reading: {
+          title: "The Craft of Clear Teaching",
+          paragraphs: [
+            "Didactic teaching is the craft of explaining things so clearly that learners understand them the first time. Where pedagogy asks how people learn, didactic work focuses on the practical art of making each lesson clear and useful.",
+            "A strong didactic explanation begins where the learner already is. It builds on what they know and adds one new idea at a time. Each step is small enough to follow but meaningful enough to matter.",
+            "Examples are the teacher's best tool. A well-chosen example turns an abstract idea into something the learner can picture and remember. Stories and pictures work the same way: they give the mind something to hold onto.",
+            "Good didactic teaching respects the learner's time. It does not hide simple ideas behind difficult words. Instead, it invites curiosity and leaves the learner wanting to understand even more.",
+          ],
+          quiz: [
+            { question: { en: "What does didactic teaching focus on?", fr: "Sur quoi l'enseignement didactique se concentre-t-il ?", zh: "教学性教学关注什么？" }, options: [{ en: "Clear explanations", fr: "Des explications claires", zh: "清晰的讲解" }, { en: "Fast speech", fr: "Parler vite", zh: "说话快" }, { en: "Long tests", fr: "De longs examens", zh: "长长的考试" }], answer: 0 },
+            { question: { en: "Where does a good explanation begin?", fr: "Où commence une bonne explication ?", zh: "好的讲解从哪里开始？" }, options: [{ en: "From what the learner already knows", fr: "De ce que l'apprenant sait déjà", zh: "从学习者已知的开始" }, { en: "From the hardest idea", fr: "De l'idée la plus difficile", zh: "从最难的想法开始" }, { en: "From a random fact", fr: "D'un fait au hasard", zh: "从随便的事实开始" }], answer: 0 },
+            { question: { en: "What is the teacher's best tool, according to the text?", fr: "Quel est le meilleur outil de l'enseignant, selon le texte ?", zh: "根据文章，老师最好的工具是什么？" }, options: [{ en: "Examples", fr: "Les exemples", zh: "例子" }, { en: "Loudness", fr: "La voix forte", zh: "大声" }, { en: "Silence", fr: "Le silence", zh: "沉默" }], answer: 0 },
+          ],
+        },
+      },
+    ],
+  },
 ];
 
 // Simplified Chinese lessons (one per topic). Day cycling reuses them.
@@ -402,6 +476,78 @@ const ZH_TOPICS: Topic[] = [
             { question: { en: "Calligraphy is the art of writing what?", fr: "La calligraphie est l'art d'écrire quoi ?", zh: "书法 是 写 什么 的 艺术？" }, options: [{ en: "Chinese characters", fr: "Des caractères chinois", zh: "汉字" }, { en: "Numbers", fr: "Des chiffres", zh: "数字" }, { en: "Music", fr: "De la musique", zh: "音乐" }], answer: 0 },
             { question: { en: "What tools are used for calligraphy?", fr: "Quels outils utilise-t-on pour la calligraphie ?", zh: "写 书法 用 什么 工具？" }, options: [{ en: "A brush and ink", fr: "Un pinceau et de l'encre", zh: "毛笔 和 墨" }, { en: "A computer", fr: "Un ordinateur", zh: "电脑" }, { en: "A pencil", fr: "Un crayon", zh: "铅笔" }], answer: 0 },
             { question: { en: "What does learning calligraphy require?", fr: "Que demande l'apprentissage de la calligraphie ?", zh: "学习 书法 需要 什么？" }, options: [{ en: "A lot of practice", fr: "Beaucoup de pratique", zh: "很多 练习" }, { en: "A lot of money", fr: "Beaucoup d'argent", zh: "很多 钱" }, { en: "One day", fr: "Un jour", zh: "一 天" }], answer: 0 },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: "pedagogy",
+    label: "教育学",
+    emoji: "📚",
+    lessons: [
+      {
+        video: {
+          title: "人 是 怎么 学习 的",
+          youtubeId: "8XCUNxQj0Sc",
+          duration: "5 分钟",
+          transcript: [
+            { start: 0, end: 35, text: "教育学 是 关于 教 和 学 的 学问。" },
+            { start: 35, end: 85, text: "好 的 老师 帮助 学生 去 理解，而 不 只是 记忆。" },
+            { start: 85, end: 140, text: "提问 往往 比 给 答案 更 有 力量。" },
+            { start: 140, end: 195, text: "当 人 把 知识 和 生活 联系 起来，就 记 得 最 牢。" },
+            { start: 195, end: 250, text: "一 个 温和 又 耐心 的 老师，能 改变 学生 的 一生。" },
+            { start: 250, end: 300, text: "学习 是 一段 永不 停止 的 旅程。" },
+          ],
+        },
+        reading: {
+          title: "什么 让 老师 伟大？",
+          paragraphs: [
+            "教育学 研究 人 是 怎么 学习 的，以及 老师 怎么 帮助 他们。伟大 的 老师 不仅 传授 知识，还 引导 学生 独立 思考，更 深入 地 理解 世界。",
+            "教育学 里 一 个 重要 的 观点 是：主动 的 学习者 记 得 最 牢。他们 不仅 听，还 提问、尝试，把 新 知识 和 已知 的 东西 联系 起来。这样 学习 就 有 意义。",
+            "耐心 和 知识 同样 重要。每个 学生 学习 的 速度 不同，好 老师 会 注意 到 并 调整。一 句 适时 的 鼓励，能 给 学习者 继续 前行 的 勇气。",
+            "最终，好 的 教学 建立 在 信任 上。当 学生 敢于 犯错、敢于 提问，真正 的 学习 就 开始 了，并且 能 持续 一辈子。",
+          ],
+          quiz: [
+            { question: { en: "What is pedagogy the study of?", fr: "De quoi la pédagogie est-elle l'étude ?", zh: "教育学 是 研究 什么 的？" }, options: [{ en: "How people learn and are taught", fr: "Comment on apprend et est enseigné", zh: "人 如何 学习 与 被教授" }, { en: "How to build machines", fr: "Comment construire des machines", zh: "如何 制造 机器" }, { en: "How to paint", fr: "Comment peindre", zh: "如何 画画" }], answer: 0 },
+            { question: { en: "How do learners remember best?", fr: "Comment les apprenants retiennent-ils le mieux ?", zh: "学习者 怎样 记 得 最 牢？" }, options: [{ en: "By being active", fr: "En étant actifs", zh: "通过 主动 参与" }, { en: "By staying silent", fr: "En restant silencieux", zh: "保持 沉默" }, { en: "By copying only", fr: "En recopiant seulement", zh: "只靠 抄写" }], answer: 0 },
+            { question: { en: "What matters as much as knowledge in teaching?", fr: "Qu'est-ce qui compte autant que le savoir dans l'enseignement ?", zh: "教学 中 和 知识 同样 重要 的 是 什么？" }, options: [{ en: "Patience", fr: "La patience", zh: "耐心" }, { en: "Speed", fr: "La vitesse", zh: "速度" }, { en: "Money", fr: "L'argent", zh: "金钱" }], answer: 0 },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: "didactic",
+    label: "教学",
+    emoji: "🎓",
+    lessons: [
+      {
+        video: {
+          title: "清楚 地 教学",
+          youtubeId: "0XOWtwq4A6g",
+          duration: "5 分钟",
+          transcript: [
+            { start: 0, end: 35, text: "教学性 教学 是 清楚、直接 地 讲解。" },
+            { start: 35, end: 85, text: "好 的 讲解 从 学习者 已 知道 的 开始。" },
+            { start: 85, end: 140, text: "简单 的 例子 让 困难 的 想法 变 容易 理解。" },
+            { start: 140, end: 195, text: "故事 和 图画 能 把 难 记 的 课 变 得 难忘。" },
+            { start: 195, end: 250, text: "最好 的 课 让 学习者 想 知道 得 更多。" },
+            { start: 250, end: 300, text: "清楚 地 教学 尊重 学习者 的 时间 和 注意力。" },
+          ],
+        },
+        reading: {
+          title: "清楚 教学 的 手艺",
+          paragraphs: [
+            "教学性 教学 是 一 门 手艺：把 东西 讲解 得 足够 清楚，让 学习者 一听 就 懂。教育学 问 人 怎么 学习，而 教学 性 工作 关注 的 是 让 每 节课 清楚 又 有 用 的 实际 技巧。",
+            "好 的 讲解 从 学习者 所在 的 地方 开始。它 建立 在 他们 已 知道 的 上，每 次 只 加 一 个 新 想法。每 一步 都 小 得 足以 跟上，又 有 意义 得 足以 有用。",
+            "例子 是 老师 最好 的 工具。一 个 好 例子 能 把 抽象 的 想法 变 成 学习者 能 想象、能 记住 的 东西。故事 和 图画 也 一样：它们 给 头脑 一 个 可以 抓住 的 东西。",
+            "好 的 教学 尊重 学习者 的 时间。它 不 把 简单 的 想法 藏 在 难懂 的 词 后面，而 是 激发 好奇心，让 学习者 想 理解 得 更多。",
+          ],
+          quiz: [
+            { question: { en: "What does didactic teaching focus on?", fr: "Sur quoi l'enseignement didactique se concentre-t-il ?", zh: "教学性 教学 关注 什么？" }, options: [{ en: "Clear explanations", fr: "Des explications claires", zh: "清晰 的 讲解" }, { en: "Fast speech", fr: "Parler vite", zh: "说话 快" }, { en: "Long tests", fr: "De longs examens", zh: "长长 的 考试" }], answer: 0 },
+            { question: { en: "Where does a good explanation begin?", fr: "Où commence une bonne explication ?", zh: "好 的 讲解 从 哪里 开始？" }, options: [{ en: "From what the learner already knows", fr: "De ce que l'apprenant sait déjà", zh: "从 学习者 已 知道 的 开始" }, { en: "From the hardest idea", fr: "De l'idée la plus difficile", zh: "从 最难 的 想法 开始" }, { en: "From a random fact", fr: "D'un fait au hasard", zh: "从 随便 的 事实 开始" }], answer: 0 },
+            { question: { en: "What is the teacher's best tool?", fr: "Quel est le meilleur outil de l'enseignant ?", zh: "老师 最好 的 工具 是 什么？" }, options: [{ en: "Examples", fr: "Les exemples", zh: "例子" }, { en: "Loudness", fr: "La voix forte", zh: "大声" }, { en: "Silence", fr: "Le silence", zh: "沉默" }], answer: 0 },
           ],
         },
       },

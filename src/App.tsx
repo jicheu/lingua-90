@@ -3,8 +3,14 @@ import { BookOpen, Flame, LayoutGrid, Sparkles, Star } from "lucide-react";
 import { useStore } from "./state/store";
 import { useTheme } from "./hooks/useTheme";
 import { initSpeech, unlockOnGesture } from "./lib/speech";
+import {
+  getMe,
+  getStoredProfileId,
+  setStoredProfileId,
+} from "./lib/profile";
 import { Pill, cn } from "./components/ui";
 import { SettingsMenu } from "./components/SettingsMenu";
+import { ProfileGate } from "./components/ProfileGate";
 import { Dashboard } from "./components/Dashboard";
 import { DayView } from "./components/DayView";
 import { ReviewHub } from "./components/ReviewHub";
@@ -12,7 +18,71 @@ import { ReviewHub } from "./components/ReviewHub";
 type View = "dashboard" | "day" | "review";
 
 export default function App() {
-  const store = useStore();
+  // null = still resolving, false = no profile yet (show gate), string = active
+  const [profileId, setProfileId] = useState<string | null | false>(null);
+  const [sso, setSso] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const me = await getMe();
+      if (cancelled) return;
+      if (me.user) {
+        // Behind YunoHost SSO: the logged-in user *is* the profile.
+        setSso(true);
+        setProfileId(me.user);
+        return;
+      }
+      const stored = getStoredProfileId();
+      setProfileId(stored ?? false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function pickProfile(id: string) {
+    setStoredProfileId(id);
+    setProfileId(id);
+  }
+
+  function switchProfile() {
+    setStoredProfileId(null);
+    setProfileId(false);
+  }
+
+  if (profileId === null) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-slate-50 text-slate-400 dark:bg-slate-950">
+        …
+      </div>
+    );
+  }
+
+  if (profileId === false) {
+    return <ProfileGate onPick={pickProfile} />;
+  }
+
+  return (
+    <LearnerApp
+      key={profileId}
+      profileId={profileId}
+      sso={sso}
+      onSwitchProfile={switchProfile}
+    />
+  );
+}
+
+function LearnerApp({
+  profileId,
+  sso,
+  onSwitchProfile,
+}: {
+  profileId: string;
+  sso: boolean;
+  onSwitchProfile: () => void;
+}) {
+  const store = useStore(profileId);
   const { state, t } = store;
   const [view, setView] = useState<View>("dashboard");
   const [activeDay, setActiveDay] = useState(1);
@@ -74,7 +144,11 @@ export default function App() {
             <Pill className="hidden bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 sm:inline-flex">
               <Star size={14} /> {state.xp}
             </Pill>
-            <SettingsMenu store={store} />
+            <SettingsMenu
+              store={store}
+              sso={sso}
+              onSwitchProfile={onSwitchProfile}
+            />
           </div>
         </div>
       </header>

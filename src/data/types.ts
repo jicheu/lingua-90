@@ -16,7 +16,9 @@ export type TopicId =
   | "philosophy"
   | "sport"
   | "science"
-  | "art";
+  | "art"
+  | "pedagogy"
+  | "didactic";
 
 /** A single vocabulary item the learner studies on a flashcard. */
 export interface Word {
@@ -102,6 +104,8 @@ export interface DayProgress {
 }
 
 export interface AppState {
+  /** Display name of the learner profile (shown on the profile picker). */
+  name: string;
   language: LanguageCode;
   /** Interface language (en / fr / zh). */
   uiLang: UiLang;
@@ -121,6 +125,8 @@ export interface AppState {
   savedWords: Record<LanguageCode, Word[]>;
   /** Achievement ids already unlocked. */
   badges: string[];
+  /** Wall-clock ms of the last local mutation; used for last-writer-wins sync. */
+  updatedAt: number;
 }
 
 export const TOTAL_DAYS = 90;

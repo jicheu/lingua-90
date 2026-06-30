@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import {
   Check,
   Languages,
+  LogOut,
   Monitor,
   Moon,
   RotateCcw,
   Settings2,
   Sun,
+  UserRound,
 } from "lucide-react";
 import type { LanguageCode, ThemeMode, UiLang } from "../data/types";
 import { TOTAL_DAYS } from "../data/types";
@@ -14,7 +16,15 @@ import type { Store } from "../state/store";
 import { UI_LANGS } from "../i18n/strings";
 import { Segmented, cn } from "./ui";
 
-export function SettingsMenu({ store }: { store: Store }) {
+export function SettingsMenu({
+  store,
+  sso = false,
+  onSwitchProfile,
+}: {
+  store: Store;
+  sso?: boolean;
+  onSwitchProfile?: () => void;
+}) {
   const { state, t } = store;
   const [open, setOpen] = useState(false);
   const [resetMsg, setResetMsg] = useState<string | null>(null);
@@ -62,6 +72,34 @@ export function SettingsMenu({ store }: { store: Store }) {
           <p className="mb-3 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">
             <Settings2 size={13} /> {t("menu.settings")}
           </p>
+
+          {/* Profile */}
+          <div className="mb-4 border-b border-slate-200 pb-4 dark:border-slate-700">
+            <p className="mb-1.5 flex items-center gap-1.5 text-sm text-slate-600 dark:text-slate-300">
+              <UserRound size={14} /> {t("profile.title")}
+            </p>
+            <input
+              value={state.name}
+              onChange={(e) => store.setName(e.target.value)}
+              disabled={sso}
+              aria-label={t("profile.name")}
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-sm outline-none focus:border-indigo-500 disabled:opacity-60 dark:border-slate-700 dark:bg-slate-800"
+            />
+            {sso ? (
+              <p className="mt-1.5 px-1 text-xs text-slate-400">
+                {t("profile.ssoNote")}
+              </p>
+            ) : (
+              onSwitchProfile && (
+                <button
+                  onClick={onSwitchProfile}
+                  className="mt-2 flex w-full items-center gap-2 rounded-xl px-1 py-1.5 text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  <LogOut size={15} /> {t("profile.switch")}
+                </button>
+              )
+            )}
+          </div>
 
           {/* Theme */}
           <div className="mb-4 flex items-center justify-between">

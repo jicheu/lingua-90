@@ -1,0 +1,74 @@
+#!/bin/bash
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+ynh_script_progression "Setting up source files..."
+
+ynh_setup_source --dest_dir="$install_dir"
+
+chown -R "$app:www-data" "$install_dir"
+
+#=================================================
+# BUILD THE STATIC SITE
+#=================================================
+ynh_script_progression "Building the web app (npm install + build)... this can take a few minutes."
+
+# The runtime server (server/index.mjs) has ZERO dependencies, so once the
+# static site is built we drop node_modules entirely to keep the install small.
+api_base="$(_api_base_for_path "$path")"
+
+pushd "$install_dir"
+    ynh_hide_warnings sudo -u "$app" env \
+        PATH="$PATH" HOME="$install_dir" npm_config_cache="$install_dir/.npm" \
+        npm ci --include=dev
+
+    ynh_hide_warnings sudo -u "$app" env \
+        PATH="$PATH" HOME="$install_dir" npm_config_cache="$install_dir/.npm" \
+        VITE_API_URL="$api_base" npm run build
+
+    # Built site is in dist/; the source toolchain is no longer needed at runtime.
+    ynh_safe_rm "$install_dir/node_modules"
+    ynh_safe_rm "$install_dir/.npm"
+popd
+
+chown -R "$app:www-data" "$install_dir"
+
+#=================================================
+# SYSTEM CONFIGURATION
+#=================================================
+ynh_script_progression "Adding system configurations related to $app..."
+
+# Log directory
+mkdir -p "/var/log/$app"
+chown -R "$app:$app" "/var/log/$app"
+
+# Reverse-proxy + service
+ynh_config_add_nginx
+ynh_config_add_systemd
+ynh_config_add_logrotate
+
+yunohost service add "$app" \
+    --description="Lingua 90 language-learning server" \
+    --log="/var/log/$app/$app.log"
+
+#=================================================
+# START SYSTEMD SERVICE
+#=================================================
+ynh_script_progression "Starting $app's systemd service..."
+
+ynh_systemctl --service="$app" --action="start" \
+    --wait_until="server on" --log_path="/var/log/$app/$app.log"
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression "Installation of $app completed"
