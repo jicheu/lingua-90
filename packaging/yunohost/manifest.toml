@@ -13,8 +13,8 @@ maintainers = ["jcverdie"]
 
 [upstream]
 license = "MIT"
-website = "https://example.com"
-code = "https://github.com/__YOUR_GH_USER__/lingua90"
+website = "https://github.com/jicheu/lingua-90"
+code = "https://github.com/jicheu/lingua-90"
 
 [integration]
 yunohost = ">= 12.1.17"
@@ -49,14 +49,15 @@ ram.runtime = "100M"
 [resources]
 
     [resources.sources.main]
-    # The application source code (THIS repository). Replace the url + sha256
-    # with your tagged release tarball. If your repo is on GitHub and uses
-    # GitHub releases, the autoupdate bot can keep these in sync.
+    # The application source code (THIS repository), pinned to a git tag.
+    # To publish a new version: create a tag (e.g. v0.2.0), then update the
+    # url + sha256 below and bump `version`. The autoupdate bot can do this for
+    # you based on the latest git tag.
     #
-    #   sha256:  sha256sum <the-downloaded-tarball>
-    url = "https://github.com/__YOUR_GH_USER__/lingua90/archive/refs/tags/v0.1.0.tar.gz"
-    sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
-    autoupdate.strategy = "latest_github_release"
+    #   sha256:  curl -sL <url> | sha256sum
+    url = "https://github.com/jicheu/lingua-90/archive/refs/tags/v0.1.0.tar.gz"
+    sha256 = "48de1a8a3e0e67360f1e3f543f19b26fe8f78d7f90d529f35640f143610a1011"
+    autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
 
