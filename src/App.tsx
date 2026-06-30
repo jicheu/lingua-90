@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { BookOpen, Flame, LayoutGrid, Sparkles, Star } from "lucide-react";
+import { BookOpen, Flame, Layers, LayoutGrid, Sparkles, Star } from "lucide-react";
+import { PracticeView } from "./components/PracticeView";
 import { useStore } from "./state/store";
 import { useTheme } from "./hooks/useTheme";
 import { initSpeech, unlockOnGesture } from "./lib/speech";
@@ -15,7 +16,7 @@ import { Dashboard } from "./components/Dashboard";
 import { DayView } from "./components/DayView";
 import { ReviewHub } from "./components/ReviewHub";
 
-type View = "dashboard" | "day" | "review";
+type View = "dashboard" | "day" | "review" | "practice";
 
 export default function App() {
   // null = still resolving, false = no profile yet (show gate), string = active
@@ -135,6 +136,12 @@ function LearnerApp({
               icon={<BookOpen size={16} />}
               label={t("nav.words")}
             />
+            <NavBtn
+              active={view === "practice"}
+              onClick={() => setView("practice")}
+              icon={<Layers size={16} />}
+              label={t("nav.practice")}
+            />
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
@@ -166,6 +173,7 @@ function LearnerApp({
             />
           )}
           {view === "review" && <ReviewHub store={store} />}
+          {view === "practice" && <PracticeView store={store} />}
         </div>
       </main>
 

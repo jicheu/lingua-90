@@ -10,6 +10,7 @@ const en = {
   // nav / chrome
   "nav.journey": "Journey",
   "nav.words": "My Words",
+  "nav.practice": "Practice",
   "menu.settings": "Settings",
   "menu.theme": "Theme",
   "menu.theme.light": "Light",
@@ -148,6 +149,8 @@ const en = {
   "srs.summary": "{known} known · {missed} to review",
   "srs.again": "New session",
   "srs.hint": "Words you miss come back more often; mastered ones appear less.",
+  "practice.empty": "No words to review yet. Tap any word in a reading or video to add it to your deck.",
+  "practice.count": "{n} words in your deck",
   "menu.session": "Cards per session",
   "backup.title": "Backup & sync across devices",
   "backup.desc":
@@ -167,6 +170,7 @@ const en = {
 const fr: Record<StringKey, string> = {
   "nav.journey": "Parcours",
   "nav.words": "Mes mots",
+  "nav.practice": "Réviser",
   "menu.settings": "Réglages",
   "menu.theme": "Thème",
   "menu.theme.light": "Clair",
@@ -301,6 +305,8 @@ const fr: Record<StringKey, string> = {
   "srs.summary": "{known} sus · {missed} à revoir",
   "srs.again": "Nouvelle session",
   "srs.hint": "Les mots ratés reviennent plus souvent ; les mots maîtrisés, moins.",
+  "practice.empty": "Aucun mot à réviser. Touchez un mot dans une lecture ou une vidéo pour l'ajouter.",
+  "practice.count": "{n} mots dans votre pile",
   "menu.session": "Cartes par session",
   "backup.title": "Sauvegarde & synchronisation entre appareils",
   "backup.desc":
@@ -320,6 +326,7 @@ const fr: Record<StringKey, string> = {
 const zh: Record<StringKey, string> = {
   "nav.journey": "学习旅程",
   "nav.words": "我的单词",
+  "nav.practice": "练习",
   "menu.settings": "设置",
   "menu.theme": "主题",
   "menu.theme.light": "浅色",
@@ -445,6 +452,8 @@ const zh: Record<StringKey, string> = {
   "srs.summary": "认识 {known} · 待复习 {missed}",
   "srs.again": "再来一组",
   "srs.hint": "没记住的单词会更常出现，已掌握的会更少出现。",
+  "practice.empty": "还没有可复习的单词。在阅读或视频中点击任意单词即可加入词库。",
+  "practice.count": "词库中有 {n} 个单词",
   "menu.session": "每组卡片数",
   "backup.title": "备份与跨设备同步",
   "backup.desc": "进度保存在此浏览器中。导出备份文件，在其他设备导入即可继续。",
