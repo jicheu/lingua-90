@@ -71,6 +71,7 @@ export interface Store {
   setThemeMode: (mode: ThemeMode) => void;
   togglePinyin: () => void;
   setTopic: (day: number, topic: TopicId) => void;
+  setVideoProgress: (day: number, seconds: number) => void;
   completeExercise: (day: number, key: ExerciseKey) => void;
   saveWord: (word: Word) => void;
   removeSavedWord: (term: string) => void;
@@ -162,8 +163,11 @@ export function useStore(profileId?: string | null): Store {
   );
 
   const isDayUnlocked = useCallback(
-    (day: number) => day <= state.currentDay,
-    [state.currentDay],
+    // A day is unlocked if it's within the reached frontier, or — robustly —
+    // if the previous day has been fully completed (so finishing a day always
+    // opens the next one, even if currentDay didn't advance for some reason).
+    (day: number) => day <= state.currentDay || (day > 1 && isDayComplete(day - 1)),
+    [state.currentDay, isDayComplete],
   );
 
   const completedCount = useMemo(
@@ -212,6 +216,25 @@ export function useStore(profileId?: string | null): Store {
     [commit],
   );
 
+  const setVideoProgress = useCallback(
+    (day: number, seconds: number) =>
+      commit((s) => {
+        const key = `${s.language}-${day}`;
+        const prev = s.progress[key];
+        if (!prev) return s; // no topic chosen yet; nothing to attach to
+        // Avoid churn: only record meaningful jumps (≥3s difference).
+        if (Math.abs((prev.videoTime ?? 0) - seconds) < 3) return s;
+        return {
+          ...s,
+          progress: {
+            ...s.progress,
+            [key]: { ...prev, videoTime: Math.floor(seconds) },
+          },
+        };
+      }),
+    [commit],
+  );
+
   const completeExercise = useCallback(
     (day: number, exKey: ExerciseKey) =>
       commit((s) => {
@@ -253,9 +276,10 @@ export function useStore(profileId?: string | null): Store {
           }
           lastCompletedDate = today;
 
-          // unlock next day
-          if (day === currentDay && currentDay < TOTAL_DAYS) {
-            currentDay += 1;
+          // unlock next day — whenever a day is completed, ensure the day
+          // after it is reachable (robust to completing days out of order)
+          if (day + 1 <= TOTAL_DAYS && day + 1 > currentDay) {
+            currentDay = day + 1;
           }
 
           // badges tied to completion
@@ -384,6 +408,7 @@ export function useStore(profileId?: string | null): Store {
     setThemeMode,
     togglePinyin,
     setTopic,
+    setVideoProgress,
     completeExercise,
     saveWord,
     removeSavedWord,

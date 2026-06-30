@@ -97,6 +97,7 @@ const en = {
   "video.next": "Next: Reading",
   "video.markWatched": "Mark watched · Continue",
   "video.watchToEnd": "Watch to the end…",
+  "video.translation": "Translation",
 
   // reading
   "read.readAloud": "Read aloud",
@@ -241,6 +242,7 @@ const fr: Record<StringKey, string> = {
   "video.next": "Suite : Lecture",
   "video.markWatched": "Marquer comme vu · Continuer",
   "video.watchToEnd": "Regardez jusqu'à la fin…",
+  "video.translation": "Traduction",
 
   "read.readAloud": "Lire à voix haute",
   "read.stop": "Arrêter",
@@ -380,6 +382,7 @@ const zh: Record<StringKey, string> = {
   "video.next": "下一步：阅读",
   "video.markWatched": "标记已看 · 继续",
   "video.watchToEnd": "请看到结尾…",
+  "video.translation": "翻译",
 
   "read.readAloud": "朗读",
   "read.stop": "停止",

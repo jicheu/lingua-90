@@ -29,7 +29,7 @@ const EN_TOPICS: Topic[] = [
       {
         video: {
           title: "The rise of the Roman Empire",
-          youtubeId: "46ZXl-V4qwA",
+          youtubeId: "Owf5Uq4oFps",
           duration: "5 min",
           transcript: [
             { start: 0, end: 30, text: "Rome began as a small city on the banks of the river Tiber." },
@@ -58,7 +58,7 @@ const EN_TOPICS: Topic[] = [
       {
         video: {
           title: "The Silk Road and ancient trade",
-          youtubeId: "vfe-eNq-146",
+          youtubeId: "YeB-1F-UKO0",
           duration: "5 min",
           transcript: [
             { start: 0, end: 35, text: "The Silk Road was not one road, but a network of trade routes." },
@@ -130,7 +130,7 @@ const EN_TOPICS: Topic[] = [
       {
         video: {
           title: "The history of the Olympic Games",
-          youtubeId: "OnW1Ym6Tg_o",
+          youtubeId: "VdHHus8IgYA",
           duration: "5 min",
           transcript: [
             { start: 0, end: 35, text: "The Olympic Games began in ancient Greece, in a place called Olympia." },
@@ -166,7 +166,7 @@ const EN_TOPICS: Topic[] = [
       {
         video: {
           title: "How big is the universe?",
-          youtubeId: "K8aDfO5T1S8",
+          youtubeId: "DmUiCweDic4",
           duration: "5 min",
           transcript: [
             { start: 0, end: 35, text: "Our planet Earth is part of a system that orbits the Sun." },
@@ -202,7 +202,7 @@ const EN_TOPICS: Topic[] = [
       {
         video: {
           title: "Why is the Mona Lisa so famous?",
-          youtubeId: "Wk5MgD_QvN0",
+          youtubeId: "yRK_uCMwZPY",
           duration: "5 min",
           transcript: [
             { start: 0, end: 35, text: "The Mona Lisa was painted by Leonardo da Vinci in Italy." },
@@ -238,7 +238,7 @@ const EN_TOPICS: Topic[] = [
       {
         video: {
           title: "How people learn",
-          youtubeId: "8XCUNxQj0Sc",
+          youtubeId: "MMmOLN5zBLY",
           duration: "5 min",
           transcript: [
             { start: 0, end: 35, text: "Pedagogy is the art and science of teaching." },
@@ -274,7 +274,7 @@ const EN_TOPICS: Topic[] = [
       {
         video: {
           title: "Teaching with clear explanations",
-          youtubeId: "0XOWtwq4A6g",
+          youtubeId: "f2O6mQkFiiw",
           duration: "5 min",
           transcript: [
             { start: 0, end: 35, text: "Didactic teaching means explaining things clearly and directly." },
@@ -314,7 +314,7 @@ const ZH_TOPICS: Topic[] = [
       {
         video: {
           title: "长城的故事",
-          youtubeId: "46ZXl-V4qwA",
+          youtubeId: "Owf5Uq4oFps",
           duration: "5 分钟",
           transcript: [
             { start: 0, end: 40, text: "长城 是 中国 古代 的 伟大 工程。" },
@@ -384,7 +384,7 @@ const ZH_TOPICS: Topic[] = [
       {
         video: {
           title: "乒乓球",
-          youtubeId: "OnW1Ym6Tg_o",
+          youtubeId: "VdHHus8IgYA",
           duration: "5 分钟",
           transcript: [
             { start: 0, end: 45, text: "乒乓球 是 一 项 很 受欢迎 的 运动。" },
@@ -419,7 +419,7 @@ const ZH_TOPICS: Topic[] = [
       {
         video: {
           title: "水 的 旅程",
-          youtubeId: "K8aDfO5T1S8",
+          youtubeId: "DmUiCweDic4",
           duration: "5 分钟",
           transcript: [
             { start: 0, end: 45, text: "水 对 所有 生命 都 非常 重要。" },
@@ -454,7 +454,7 @@ const ZH_TOPICS: Topic[] = [
       {
         video: {
           title: "中国 书法",
-          youtubeId: "Wk5MgD_QvN0",
+          youtubeId: "yRK_uCMwZPY",
           duration: "5 分钟",
           transcript: [
             { start: 0, end: 45, text: "书法 是 写 汉字 的 艺术。" },
@@ -489,7 +489,7 @@ const ZH_TOPICS: Topic[] = [
       {
         video: {
           title: "人 是 怎么 学习 的",
-          youtubeId: "8XCUNxQj0Sc",
+          youtubeId: "MMmOLN5zBLY",
           duration: "5 分钟",
           transcript: [
             { start: 0, end: 35, text: "教育学 是 关于 教 和 学 的 学问。" },
@@ -525,7 +525,7 @@ const ZH_TOPICS: Topic[] = [
       {
         video: {
           title: "清楚 地 教学",
-          youtubeId: "0XOWtwq4A6g",
+          youtubeId: "f2O6mQkFiiw",
           duration: "5 分钟",
           transcript: [
             { start: 0, end: 35, text: "教学性 教学 是 清楚、直接 地 讲解。" },

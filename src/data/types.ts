@@ -99,6 +99,8 @@ export interface DayProgress {
   vocabDone: boolean;
   videoDone: boolean;
   readingDone: boolean;
+  /** Playback position (seconds) the learner reached in the video, to resume. */
+  videoTime?: number;
   /** ISO date string of completion (all three done). */
   completedAt?: string;
 }
