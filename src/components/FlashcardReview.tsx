@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Check, Eye, EyeOff, RefreshCw, Volume2, X } from "lucide-react";
+import { useRef, useState } from "react";
+import { Check, RefreshCw, Volume2, X } from "lucide-react";
 import type { Store } from "../state/store";
 import type { Word } from "../data/types";
 import { pronounce } from "../lib/speech";
@@ -7,53 +7,85 @@ import { pickSession } from "../lib/srs";
 import { loc } from "../i18n/strings";
 import { Button, Card, ProgressBar, cn } from "./ui";
 
-/**
- * Spaced-repetition flashcard session over the learner's saved words. Cards the
- * learner misses come back sooner and more often; well-known cards appear
- * rarely. Session length is configurable (Settings → cards per session).
- */
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildChoices(current: Word, pool: Word[]): Word[] {
+  const others = shuffle(pool.filter((w) => w.term !== current.term)).slice(0, 4);
+  const pos = Math.floor(Math.random() * (others.length + 1));
+  const result = [...others];
+  result.splice(pos, 0, current);
+  return result;
+}
+
 export function FlashcardReview({ store }: { store: Store }) {
   const { state, t } = store;
+  const allWords = state.savedWords[state.language];
+  const choicesRef = useRef<Word[][]>([]);
 
-  const build = () =>
-    pickSession(state.savedWords[state.language], state.sessionSize);
+  function buildSession(): Word[] {
+    const s = pickSession(allWords, state.sessionSize);
+    choicesRef.current = s.map((w) => buildChoices(w, allWords));
+    return s;
+  }
 
-  const [session, setSession] = useState<Word[]>(build);
+  const [session, setSession] = useState<Word[]>(buildSession);
   const [i, setI] = useState(0);
-  const [revealed, setRevealed] = useState(false);
+  const [selected, setSelected] = useState<Word | null>(null);
+  const [pending, setPending] = useState(false);
   const [known, setKnown] = useState(0);
   const [missed, setMissed] = useState(0);
 
   const showPhonetic = state.language === "en" || state.showPinyin;
   const finished = i >= session.length;
 
-  function answer(ok: boolean) {
+  function advance(ok: boolean) {
     store.recordFlashcard(session[i].term, ok);
     if (ok) setKnown((k) => k + 1);
     else setMissed((m) => m + 1);
-    setRevealed(false);
-    setI((x) => x + 1);
+    setTimeout(() => {
+      setSelected(null);
+      setPending(false);
+      setI((x) => x + 1);
+    }, 700);
+  }
+
+  function pick(choice: Word) {
+    if (pending) return;
+    setSelected(choice);
+    setPending(true);
+    advance(choice.term === w.term);
+  }
+
+  function miss() {
+    if (pending) return;
+    setPending(true);
+    advance(false);
   }
 
   function restart() {
-    setSession(build());
+    const s = buildSession();
+    setSession(s);
     setI(0);
-    setRevealed(false);
+    setSelected(null);
     setKnown(0);
     setMissed(0);
+    setPending(false);
   }
 
-  if (session.length === 0) {
-    return null;
-  }
+  if (session.length === 0) return null;
 
   if (finished) {
     return (
       <Card className="p-8 text-center">
         <Check className="mx-auto mb-2 text-emerald-500" size={34} />
-        <h2 className="font-display text-xl font-semibold">
-          {t("srs.complete")}
-        </h2>
+        <h2 className="font-display text-xl font-semibold">{t("srs.complete")}</h2>
         <p className="mt-1 text-sm text-slate-500">
           {t("srs.summary", { known, missed })}
         </p>
@@ -65,6 +97,7 @@ export function FlashcardReview({ store }: { store: Store }) {
   }
 
   const w = session[i];
+  const choices = choicesRef.current[i] ?? [];
 
   return (
     <Card className="p-6">
@@ -78,41 +111,14 @@ export function FlashcardReview({ store }: { store: Store }) {
       </div>
       <ProgressBar value={(i / session.length) * 100} />
 
-      <div
-        className="mx-auto mt-4 flex min-h-[14rem] max-w-md cursor-pointer flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center dark:border-slate-800 dark:bg-slate-900"
-        onClick={() => setRevealed((r) => !r)}
-      >
+      <div className="mx-auto mt-4 flex min-h-[7rem] max-w-md flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center dark:border-slate-800 dark:bg-slate-900">
         <span className="font-display text-3xl font-semibold">{w.term}</span>
         {showPhonetic && w.phonetic && (
           <span className="mt-1 text-sm text-indigo-500">{w.phonetic}</span>
         )}
-        {revealed ? (
-          <div className="mt-4">
-            <p className="text-lg font-medium">
-              {loc(state.uiLang, w.translation)}
-            </p>
-            {loc(state.uiLang, w.definition) && (
-              <p className="mt-1 text-sm text-slate-500">
-                {loc(state.uiLang, w.definition)}
-              </p>
-            )}
-            {w.example && (
-              <p className="mt-2 text-sm italic text-slate-400">“{w.example}”</p>
-            )}
-          </div>
-        ) : (
-          <span className="mt-4 flex items-center gap-1 text-xs text-slate-400">
-            <Eye size={12} /> {t("review.reveal")}
-          </span>
-        )}
-        {revealed && (
-          <span className="mt-3 flex items-center gap-1 text-xs text-slate-400">
-            <EyeOff size={12} /> {t("review.hide")}
-          </span>
-        )}
       </div>
 
-      <div className="mt-4 flex items-center justify-center gap-2">
+      <div className="mt-3 flex justify-center">
         <Button
           variant="outline"
           size="sm"
@@ -122,27 +128,48 @@ export function FlashcardReview({ store }: { store: Store }) {
         </Button>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {choices.map((choice) => {
+          const isSelected = selected?.term === choice.term;
+          const isCorrect = choice.term === w.term;
+          let cls: string;
+          if (isSelected && isCorrect) {
+            cls = "border-emerald-400 bg-emerald-50 text-emerald-700 dark:border-emerald-500 dark:bg-emerald-500/10 dark:text-emerald-300";
+          } else if (isSelected && !isCorrect) {
+            cls = "border-rose-400 bg-rose-50 text-rose-700 dark:border-rose-500 dark:bg-rose-500/10 dark:text-rose-300";
+          } else if (pending && isCorrect) {
+            cls = "border-emerald-400 bg-emerald-50 text-emerald-700 dark:border-emerald-500 dark:bg-emerald-500/10 dark:text-emerald-300";
+          } else {
+            cls = "border-slate-200 text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800";
+          }
+          return (
+            <button
+              key={choice.term}
+              disabled={pending}
+              onClick={() => pick(choice)}
+              className={cn(
+                "rounded-2xl border px-4 py-3 text-sm font-medium transition",
+                cls,
+              )}
+            >
+              {loc(state.uiLang, choice.translation)}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="mt-4 flex justify-center">
         <button
-          onClick={() => answer(false)}
+          onClick={miss}
+          disabled={pending}
           className={cn(
-            "flex items-center justify-center gap-1.5 rounded-2xl border px-4 py-3 text-sm font-medium transition",
-            "border-rose-300 text-rose-600 hover:bg-rose-50 dark:border-rose-500/30 dark:text-rose-300 dark:hover:bg-rose-500/10",
+            "flex items-center gap-1.5 rounded-2xl border px-4 py-2 text-sm font-medium transition",
+            "border-rose-300 text-rose-500 hover:bg-rose-50 dark:border-rose-500/30 dark:text-rose-400 dark:hover:bg-rose-500/10",
           )}
         >
-          <X size={16} /> {t("srs.missed")}
-        </button>
-        <button
-          onClick={() => answer(true)}
-          className={cn(
-            "flex items-center justify-center gap-1.5 rounded-2xl border px-4 py-3 text-sm font-medium transition",
-            "border-emerald-300 text-emerald-600 hover:bg-emerald-50 dark:border-emerald-500/30 dark:text-emerald-300 dark:hover:bg-emerald-500/10",
-          )}
-        >
-          <Check size={16} /> {t("srs.known")}
+          <X size={15} /> {t("srs.missed")}
         </button>
       </div>
-      <p className="mt-3 text-center text-xs text-slate-400">{t("srs.hint")}</p>
     </Card>
   );
 }

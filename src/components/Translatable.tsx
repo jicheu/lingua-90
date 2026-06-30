@@ -5,6 +5,7 @@ import type { LanguageCode } from "../data/types";
 import { lookupWord, type Gloss } from "../lib/dictionary";
 import { pronounce } from "../lib/speech";
 import { loc } from "../i18n/strings";
+import { toast } from "../lib/toast";
 import { cn } from "./ui";
 
 interface PopoverState {
@@ -98,6 +99,7 @@ export function Translatable({
         example: "",
         category: source,
       });
+      toast(store.t("toast.wordAdded"));
     }
     onWordOpen?.();
     const rect = (e.target as HTMLElement).getBoundingClientRect();

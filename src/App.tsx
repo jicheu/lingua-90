@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { BookOpen, Flame, Layers, LayoutGrid, Sparkles, Star } from "lucide-react";
 import { PracticeView } from "./components/PracticeView";
+import { ToastContainer } from "./components/Toast";
 import { useStore } from "./state/store";
 import { useTheme } from "./hooks/useTheme";
 import { initSpeech, unlockOnGesture } from "./lib/speech";
@@ -191,7 +192,21 @@ function LearnerApp({
           icon={<BookOpen size={18} />}
           label={t("nav.words")}
         />
+        <MobileNav
+          active={view === "review"}
+          onClick={() => setView("review")}
+          icon={<BookOpen size={18} />}
+          label={t("nav.words")}
+        />
+        <MobileNav
+          active={view === "practice"}
+          onClick={() => setView("practice")}
+          icon={<Layers size={18} />}
+          label={t("nav.practice")}
+        />
       </nav>
+
+      <ToastContainer />
 
       <footer className="mx-auto max-w-5xl px-4 py-10 text-center text-xs text-slate-400">
         <p>
@@ -203,6 +218,7 @@ function LearnerApp({
           <Sparkles size={12} /> {t("footer.saved")}
         </p>
       </footer>
+      <ToastContainer />
     </div>
   );
 }

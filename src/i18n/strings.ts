@@ -165,6 +165,7 @@ const en = {
   "backup.restored": "Progress restored.",
   "backup.badFile": "Could not read that backup file.",
   "backup.wasReset": "All progress reset.",
+  "toast.wordAdded": "Added to your practice deck",
 };
 
 const fr: Record<StringKey, string> = {
@@ -321,6 +322,7 @@ const fr: Record<StringKey, string> = {
   "backup.restored": "Progression restaurée.",
   "backup.badFile": "Impossible de lire ce fichier de sauvegarde.",
   "backup.wasReset": "Progression réinitialisée.",
+  "toast.wordAdded": "Ajouté à votre pile de révision",
 };
 
 const zh: Record<StringKey, string> = {
@@ -467,6 +469,7 @@ const zh: Record<StringKey, string> = {
   "backup.restored": "进度已恢复。",
   "backup.badFile": "无法读取该备份文件。",
   "backup.wasReset": "进度已重置。",
+  "toast.wordAdded": "已加入练习词库",
 };
 
 const TABLES: Record<UiLang, Record<StringKey, string>> = { en, fr, zh };
