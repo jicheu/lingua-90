@@ -12,6 +12,7 @@ import type {
 import { TOTAL_DAYS } from "../data/types";
 import { makeT, type TFunc } from "../i18n/strings";
 import { loadState, saveState } from "../lib/profile";
+import { initSrs, applyResult } from "../lib/srs";
 
 const STORAGE_KEY = "lingua90-state-v1";
 
@@ -30,6 +31,7 @@ const initialState: AppState = {
   progress: {},
   savedWords: { en: [], zh: [] },
   badges: [],
+  sessionSize: 10,
   updatedAt: 0,
 };
 
@@ -76,6 +78,10 @@ export interface Store {
   saveWord: (word: Word) => void;
   removeSavedWord: (term: string) => void;
   isWordSaved: (term: string) => boolean;
+  /** Record a flashcard answer (spaced-repetition update). */
+  recordFlashcard: (term: string, known: boolean) => void;
+  /** Set how many cards a review session contains. */
+  setSessionSize: (n: number) => void;
   exportState: () => string;
   importState: (json: string) => boolean;
   resetDay: (day: number) => void;
@@ -330,7 +336,7 @@ export function useStore(profileId?: string | null): Store {
         if (list.some((w) => w.term === word.term)) return s;
         const savedWords = {
           ...s.savedWords,
-          [s.language]: [...list, word],
+          [s.language]: [...list, { ...word, srs: word.srs ?? initSrs() }],
         };
         const badges = new Set(s.badges);
         const total = savedWords[s.language].length;
@@ -338,6 +344,28 @@ export function useStore(profileId?: string | null): Store {
         if (total >= 100) badges.add("words-100");
         return { ...s, savedWords, badges: Array.from(badges) };
       }),
+    [commit],
+  );
+
+  const recordFlashcard = useCallback(
+    (term: string, known: boolean) =>
+      commit((s) => {
+        const list = s.savedWords[s.language];
+        const i = list.findIndex((w) => w.term === term);
+        if (i < 0) return s;
+        const next = [...list];
+        next[i] = { ...list[i], srs: applyResult(list[i].srs, known) };
+        return { ...s, savedWords: { ...s.savedWords, [s.language]: next } };
+      }),
+    [commit],
+  );
+
+  const setSessionSize = useCallback(
+    (n: number) =>
+      commit((s) => ({
+        ...s,
+        sessionSize: Math.max(3, Math.min(50, Math.round(n) || s.sessionSize)),
+      })),
     [commit],
   );
 
@@ -413,6 +441,8 @@ export function useStore(profileId?: string | null): Store {
     saveWord,
     removeSavedWord,
     isWordSaved,
+    recordFlashcard,
+    setSessionSize,
     exportState,
     importState,
     resetDay,

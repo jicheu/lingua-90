@@ -3,8 +3,10 @@ import {
   Check,
   Languages,
   LogOut,
+  Minus,
   Monitor,
   Moon,
+  Plus,
   RotateCcw,
   Settings2,
   Sun,
@@ -175,6 +177,31 @@ export function SettingsMenu({
 
           {/* Reset the current day's progress */}
           <div className="mt-3 border-t border-slate-200 pt-3 dark:border-slate-700">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-sm text-slate-600 dark:text-slate-300">
+                {t("menu.session")}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => store.setSessionSize(state.sessionSize - 1)}
+                  aria-label="−"
+                  className="grid h-7 w-7 place-items-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+                >
+                  <Minus size={14} />
+                </button>
+                <span className="w-6 text-center text-sm font-semibold tabular-nums">
+                  {state.sessionSize}
+                </span>
+                <button
+                  onClick={() => store.setSessionSize(state.sessionSize + 1)}
+                  aria-label="+"
+                  className="grid h-7 w-7 place-items-center rounded-full bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300"
+                >
+                  <Plus size={14} />
+                </button>
+              </div>
+            </div>
+
             <button
               onClick={() => {
                 const day = Math.min(state.currentDay, TOTAL_DAYS);

@@ -20,6 +20,20 @@ export type TopicId =
   | "pedagogy"
   | "didactic";
 
+/** Spaced-repetition stats attached to a saved word. */
+export interface SrsStat {
+  /** Times shown in a flashcard session. */
+  seen: number;
+  /** Times the learner knew it. */
+  correct: number;
+  /** Times the learner missed it. */
+  wrong: number;
+  /** Mastery level 0–5 (higher = better known = shown less). */
+  level: number;
+  /** Wall-clock ms when the card is eligible to reappear. */
+  due?: number;
+}
+
 /** A single vocabulary item the learner studies on a flashcard. */
 export interface Word {
   /** The headword in the target language (English word, or Chinese characters). */
@@ -34,6 +48,8 @@ export interface Word {
   example: string;
   /** Loose register/category, mostly for display. */
   category: string;
+  /** Spaced-repetition stats — present on saved words. */
+  srs?: SrsStat;
 }
 
 /** A timed transcript line, synced to YouTube playback time (seconds). */
@@ -127,6 +143,8 @@ export interface AppState {
   savedWords: Record<LanguageCode, Word[]>;
   /** Achievement ids already unlocked. */
   badges: string[];
+  /** How many cards a flashcard review session contains. */
+  sessionSize: number;
   /** Wall-clock ms of the last local mutation; used for last-writer-wins sync. */
   updatedAt: number;
 }

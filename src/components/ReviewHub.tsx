@@ -1,9 +1,6 @@
 import { useRef, useState } from "react";
 import {
   Download,
-  Eye,
-  EyeOff,
-  Shuffle,
   Star,
   Trash2,
   TriangleAlert,
@@ -13,7 +10,8 @@ import {
 import type { Store } from "../state/store";
 import { pronounce } from "../lib/speech";
 import { loc } from "../i18n/strings";
-import { Button, Card, cn } from "./ui";
+import { FlashcardReview } from "./FlashcardReview";
+import { Button, Card } from "./ui";
 
 export function ReviewHub({ store }: { store: Store }) {
   const { state, t } = store;
@@ -29,7 +27,7 @@ export function ReviewHub({ store }: { store: Store }) {
         </p>
       </div>
 
-      {words.length > 0 && <Practice store={store} />}
+      {words.length > 0 && <FlashcardReview key={state.language} store={store} />}
 
       {words.length === 0 ? (
         <Card className="p-10 text-center text-slate-400">
@@ -70,61 +68,6 @@ export function ReviewHub({ store }: { store: Store }) {
 
       <BackupRestore store={store} />
     </div>
-  );
-}
-
-function Practice({ store }: { store: Store }) {
-  const { state, t } = store;
-  const words = state.savedWords[state.language];
-  const [idx, setIdx] = useState(0);
-  const [reveal, setReveal] = useState(false);
-
-  const w = words[Math.min(idx, words.length - 1)];
-
-  function next(random: boolean) {
-    setReveal(false);
-    setIdx((i) =>
-      random ? Math.floor(Math.random() * words.length) : (i + 1) % words.length,
-    );
-  }
-
-  return (
-    <Card className="p-6">
-      <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
-        {t("review.practice")}
-      </h2>
-      <div
-        className="mx-auto flex max-w-md cursor-pointer flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center dark:border-slate-800 dark:bg-slate-900"
-        onClick={() => setReveal((r) => !r)}
-      >
-        <span className="font-display text-3xl font-semibold">{w.term}</span>
-        {(state.language === "en" || state.showPinyin) && w.phonetic && (
-          <span className="mt-1 text-sm text-indigo-500">{w.phonetic}</span>
-        )}
-        <div
-          className={cn(
-            "mt-4 text-lg font-medium transition",
-            reveal ? "opacity-100" : "select-none opacity-0",
-          )}
-        >
-          {loc(state.uiLang, w.translation)}
-        </div>
-        <span className="mt-3 flex items-center gap-1 text-xs text-slate-400">          {reveal ? <EyeOff size={12} /> : <Eye size={12} />}
-          {reveal ? t("review.hide") : t("review.reveal")}
-        </span>
-      </div>
-      <div className="mt-4 flex justify-center gap-2">
-        <Button variant="outline" size="sm" onClick={() => pronounce(w.term, state.language)}>
-          <Volume2 size={15} /> {t("common.listen")}
-        </Button>
-        <Button size="sm" onClick={() => next(false)}>
-          {t("review.next")} →
-        </Button>
-        <Button variant="ghost" size="sm" onClick={() => next(true)}>
-          <Shuffle size={15} /> {t("review.shuffle")}
-        </Button>
-      </div>
-    </Card>
   );
 }
 

@@ -61,11 +61,14 @@ export function Translatable({
   store,
   className,
   onWordOpen,
+  source = "clicked",
 }: {
   text: string;
   store: Store;
   className?: string;
   onWordOpen?: () => void;
+  /** Category tag stored on words auto-added when clicked (e.g. "reading"). */
+  source?: string;
 }) {
   const [pop, setPop] = useState<PopoverState | null>(null);
   const { state } = store;
@@ -83,6 +86,18 @@ export function Translatable({
     if (!gloss) {
       setPop(null);
       return;
+    }
+    // Auto-add any word the learner taps in a text/video to their deck, so it
+    // feeds the flashcard review.
+    if (!store.isWordSaved(gloss.term)) {
+      store.saveWord({
+        term: gloss.term,
+        phonetic: "",
+        translation: gloss.translation,
+        definition: gloss.definition ?? { en: "", fr: "", zh: "" },
+        example: "",
+        category: source,
+      });
     }
     onWordOpen?.();
     const rect = (e.target as HTMLElement).getBoundingClientRect();
