@@ -76,6 +76,7 @@ export interface Store {
   setVideoProgress: (day: number, seconds: number) => void;
   completeExercise: (day: number, key: ExerciseKey) => void;
   saveWord: (word: Word) => void;
+  updateWord: (word: Word) => void;
   removeSavedWord: (term: string) => void;
   isWordSaved: (term: string) => boolean;
   /** Record a flashcard answer (spaced-repetition update). */
@@ -217,7 +218,11 @@ export function useStore(profileId?: string | null): Store {
           videoDone: false,
           readingDone: false,
         };
-        return { ...s, progress: { ...s.progress, [key]: { ...prev, topic } } };
+        return {
+          ...s,
+          lastTopic: topic,
+          progress: { ...s.progress, [key]: { ...prev, topic } },
+        };
       }),
     [commit],
   );
@@ -347,6 +352,19 @@ export function useStore(profileId?: string | null): Store {
     [commit],
   );
 
+  const updateWord = useCallback(
+    (word: Word) =>
+      commit((s) => {
+        const list = s.savedWords[s.language];
+        const idx = list.findIndex((w) => w.term === word.term);
+        if (idx < 0) return s;
+        const next = [...list];
+        next[idx] = { ...list[idx], ...word, srs: list[idx].srs };
+        return { ...s, savedWords: { ...s.savedWords, [s.language]: next } };
+      }),
+    [commit],
+  );
+
   const recordFlashcard = useCallback(
     (term: string, known: boolean) =>
       commit((s) => {
@@ -439,6 +457,7 @@ export function useStore(profileId?: string | null): Store {
     setVideoProgress,
     completeExercise,
     saveWord,
+    updateWord,
     removeSavedWord,
     isWordSaved,
     recordFlashcard,

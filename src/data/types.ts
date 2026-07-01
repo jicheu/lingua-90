@@ -145,6 +145,8 @@ export interface AppState {
   badges: string[];
   /** How many cards a flashcard review session contains. */
   sessionSize: number;
+  /** Last topic the learner chose (pre-selects the same topic for new days). */
+  lastTopic?: TopicId;
   /** Wall-clock ms of the last local mutation; used for last-writer-wins sync. */
   updatedAt: number;
 }

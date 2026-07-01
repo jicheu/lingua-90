@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Check,
+  FileText,
   Languages,
   LogOut,
   Minus,
@@ -12,6 +13,7 @@ import {
   Sun,
   UserRound,
 } from "lucide-react";
+import { exportWordsPdf } from "../lib/pdfExport";
 import type { LanguageCode, ThemeMode, UiLang } from "../data/types";
 import { TOTAL_DAYS } from "../data/types";
 import type { Store } from "../state/store";
@@ -217,6 +219,15 @@ export function SettingsMenu({
             {resetMsg && (
               <p className="mt-1 px-1 text-xs text-emerald-600">{resetMsg}</p>
             )}
+
+            <button
+              onClick={() =>
+                exportWordsPdf(state.savedWords[state.language], state.uiLang)
+              }
+              className="mt-2 flex w-full items-center gap-2 rounded-xl px-1 py-1.5 text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <FileText size={15} /> {t("menu.downloadPdf")}
+            </button>
           </div>
         </div>
       )}

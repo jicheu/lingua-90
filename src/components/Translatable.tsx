@@ -3,6 +3,7 @@ import { Star, Volume2, X } from "lucide-react";
 import type { Store } from "../state/store";
 import type { LanguageCode } from "../data/types";
 import { lookupWord, normalizeToken, type Gloss } from "../lib/dictionary";
+import { translateText } from "../lib/translate";
 import { pronounce } from "../lib/speech";
 import { loc } from "../i18n/strings";
 import { toast } from "../lib/toast";
@@ -99,6 +100,25 @@ export function Translatable({
           category: source,
         });
         toast(store.t("toast.wordAdded"));
+        // Async: fetch a real translation and update the saved word.
+        const uiLang = state.uiLang;
+        const lang = state.language;
+        translateText(norm, lang, uiLang, new AbortController().signal)
+          .then((tr) => {
+            const translation = { en: norm, fr: norm, zh: norm };
+            if (uiLang === "en") translation.en = tr;
+            else if (uiLang === "fr") translation.fr = tr;
+            else translation.zh = tr;
+            store.updateWord({
+              term: norm,
+              phonetic: "",
+              translation,
+              definition: { en: "", fr: "", zh: "" },
+              example: "",
+              category: source,
+            });
+          })
+          .catch(() => {/* keep placeholder if offline */});
       }
       setPop(null);
       return;

@@ -166,6 +166,7 @@ const en = {
   "backup.badFile": "Could not read that backup file.",
   "backup.wasReset": "All progress reset.",
   "toast.wordAdded": "Added to your practice deck",
+  "menu.downloadPdf": "Download word cards (PDF)",
 };
 
 const fr: Record<StringKey, string> = {
@@ -323,6 +324,7 @@ const fr: Record<StringKey, string> = {
   "backup.badFile": "Impossible de lire ce fichier de sauvegarde.",
   "backup.wasReset": "Progression réinitialisée.",
   "toast.wordAdded": "Ajouté à votre pile de révision",
+  "menu.downloadPdf": "Télécharger les cartes de mots (PDF)",
 };
 
 const zh: Record<StringKey, string> = {
@@ -470,6 +472,7 @@ const zh: Record<StringKey, string> = {
   "backup.badFile": "无法读取该备份文件。",
   "backup.wasReset": "进度已重置。",
   "toast.wordAdded": "已加入练习词库",
+  "menu.downloadPdf": "下载单词卡片（PDF）",
 };
 
 const TABLES: Record<UiLang, Record<StringKey, string>> = { en, fr, zh };

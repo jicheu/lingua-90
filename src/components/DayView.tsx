@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Check, Film, BookText, SpellCheck2 } from "lucide-react";
 import type { Store } from "../state/store";
 import type { TopicId } from "../data/types";
@@ -20,9 +20,16 @@ export function DayView({
   day: number;
   onBack: () => void;
 }) {
-  const { t } = store;
+  const { t, state } = store;
   const progress = store.getDay(day);
   const [step, setStep] = useState<Step>("vocab");
+
+  // Pre-select the last used topic for days that don't have one yet.
+  useEffect(() => {
+    if (!progress.topic && state.lastTopic) {
+      store.setTopic(day, state.lastTopic);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const steps: {
     key: Step;
