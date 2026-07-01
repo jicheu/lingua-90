@@ -7,7 +7,7 @@ import { Card } from "./ui";
 export function MyVideos({ store }: { store: Store }) {
   const { state, t } = store;
   const [playing, setPlaying] = useState<WatchedVideo | null>(null);
-  const videos = state.watchedVideos;
+  const videos = state.watchedVideos ?? [];
 
   return (
     <div className="space-y-5">

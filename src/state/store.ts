@@ -384,8 +384,9 @@ export function useStore(profileId?: string | null): Store {
   const addWatchedVideo = useCallback(
     (video: WatchedVideo) =>
       commit((s) => {
-        if (s.watchedVideos.some((v) => v.youtubeId === video.youtubeId && v.day === video.day)) return s;
-        return { ...s, watchedVideos: [...s.watchedVideos, video] };
+        const list = s.watchedVideos ?? [];
+        if (list.some((v) => v.youtubeId === video.youtubeId && v.day === video.day)) return s;
+        return { ...s, watchedVideos: [...list, video] };
       }),
     [commit],
   );
