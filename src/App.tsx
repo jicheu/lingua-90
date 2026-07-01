@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { BookOpen, Flame, Layers, LayoutGrid, Sparkles, Star } from "lucide-react";
+import { BookOpen, Film, Flame, Layers, LayoutGrid, Sparkles, Star } from "lucide-react";
 import { PracticeView } from "./components/PracticeView";
+import { MyVideos } from "./components/MyVideos";
 import { ToastContainer } from "./components/Toast";
 import { useStore } from "./state/store";
 import { useTheme } from "./hooks/useTheme";
@@ -17,7 +18,7 @@ import { Dashboard } from "./components/Dashboard";
 import { DayView } from "./components/DayView";
 import { ReviewHub } from "./components/ReviewHub";
 
-type View = "dashboard" | "day" | "review" | "practice";
+type View = "dashboard" | "day" | "review" | "practice" | "videos";
 
 export default function App() {
   // null = still resolving, false = no profile yet (show gate), string = active
@@ -143,6 +144,12 @@ function LearnerApp({
               icon={<Layers size={16} />}
               label={t("nav.practice")}
             />
+            <NavBtn
+              active={view === "videos"}
+              onClick={() => setView("videos")}
+              icon={<Film size={16} />}
+              label={t("nav.videos")}
+            />
           </nav>
 
           <div className="ml-auto flex items-center gap-2">
@@ -175,6 +182,7 @@ function LearnerApp({
           )}
           {view === "review" && <ReviewHub store={store} />}
           {view === "practice" && <PracticeView store={store} />}
+          {view === "videos" && <MyVideos store={store} />}
         </div>
       </main>
 
@@ -197,6 +205,12 @@ function LearnerApp({
           onClick={() => setView("practice")}
           icon={<Layers size={18} />}
           label={t("nav.practice")}
+        />
+        <MobileNav
+          active={view === "videos"}
+          onClick={() => setView("videos")}
+          icon={<Film size={18} />}
+          label={t("nav.videos")}
         />
       </nav>
 

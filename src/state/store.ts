@@ -7,6 +7,7 @@ import type {
   ThemeMode,
   TopicId,
   UiLang,
+  WatchedVideo,
   Word,
 } from "../data/types";
 import { TOTAL_DAYS } from "../data/types";
@@ -32,6 +33,7 @@ const initialState: AppState = {
   savedWords: { en: [], zh: [] },
   badges: [],
   sessionSize: 10,
+  watchedVideos: [],
   updatedAt: 0,
 };
 
@@ -81,6 +83,7 @@ export interface Store {
   isWordSaved: (term: string) => boolean;
   /** Record a flashcard answer (spaced-repetition update). */
   recordFlashcard: (term: string, known: boolean) => void;
+  addWatchedVideo: (video: WatchedVideo) => void;
   /** Set how many cards a review session contains. */
   setSessionSize: (n: number) => void;
   exportState: () => string;
@@ -378,6 +381,15 @@ export function useStore(profileId?: string | null): Store {
     [commit],
   );
 
+  const addWatchedVideo = useCallback(
+    (video: WatchedVideo) =>
+      commit((s) => {
+        if (s.watchedVideos.some((v) => v.youtubeId === video.youtubeId && v.day === video.day)) return s;
+        return { ...s, watchedVideos: [...s.watchedVideos, video] };
+      }),
+    [commit],
+  );
+
   const setSessionSize = useCallback(
     (n: number) =>
       commit((s) => ({
@@ -461,6 +473,7 @@ export function useStore(profileId?: string | null): Store {
     removeSavedWord,
     isWordSaved,
     recordFlashcard,
+    addWatchedVideo,
     setSessionSize,
     exportState,
     importState,

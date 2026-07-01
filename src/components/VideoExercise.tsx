@@ -295,6 +295,13 @@ export function VideoExercise({
               disabled={!reached}
               onClick={() => {
                 store.completeExercise(day, "videoDone");
+                store.addWatchedVideo({
+                  youtubeId: video.youtubeId,
+                  title: video.title,
+                  topic,
+                  day,
+                  watchedAt: new Date().toISOString(),
+                });
                 onComplete();
               }}
             >

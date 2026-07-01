@@ -2,11 +2,7 @@ import type { LanguageCode, Topic, TopicId, TopicMeta } from "./types";
 import { VIDEO_LESSONS } from "./videoLessons.generated";
 
 export const TOPIC_META: TopicMeta[] = [
-  { id: "history", label: "History", emoji: "🏛️" },
   { id: "philosophy", label: "Philosophy", emoji: "🦉" },
-  { id: "sport", label: "Sport", emoji: "⚽" },
-  { id: "science", label: "Science", emoji: "🔬" },
-  { id: "art", label: "Art", emoji: "🎨" },
   { id: "pedagogy", label: "Pedagogy", emoji: "📚" },
   { id: "didactic", label: "Didactic", emoji: "🎓" },
 ];
@@ -117,6 +113,35 @@ const EN_TOPICS: Topic[] = [
             { question: { en: "Where did Stoicism begin?", fr: "Où le stoïcisme a-t-il commencé ?", zh: "斯多葛主义起源于哪里？" }, options: [{ en: "Ancient Egypt", fr: "L'Égypte antique", zh: "古埃及" }, { en: "Ancient Greece", fr: "La Grèce antique", zh: "古希腊" }, { en: "Medieval France", fr: "La France médiévale", zh: "中世纪法国" }], answer: 1 },
             { question: { en: "What did the Stoics say we can always control?", fr: "Que pouvons-nous toujours contrôler, selon les stoïciens ?", zh: "斯多葛学派认为我们始终能控制什么？" }, options: [{ en: "The weather", fr: "Le temps qu'il fait", zh: "天气" }, { en: "Our own thoughts and actions", fr: "Nos propres pensées et actions", zh: "我们自己的想法和行动" }, { en: "Other people", fr: "Les autres", zh: "其他人" }], answer: 1 },
             { question: { en: "Which writer was a famous Stoic?", fr: "Quel auteur était un célèbre stoïcien ?", zh: "哪位作家是著名的斯多葛派？" }, options: [{ en: "Marcus Aurelius", fr: "Marc Aurèle", zh: "马可·奥勒留" }, { en: "Isaac Newton", fr: "Isaac Newton", zh: "艾萨克·牛顿" }, { en: "Leonardo da Vinci", fr: "Léonard de Vinci", zh: "列奥纳多·达·芬奇" }], answer: 0 },
+          ],
+        },
+      },
+      {
+        video: {
+          title: "Plato's Allegory of the Cave",
+          youtubeId: "1RWOpQXTltA",
+          duration: "5 min",
+          transcript: [
+            { start: 0, end: 35, text: "Plato told a story about prisoners in a cave." },
+            { start: 35, end: 85, text: "They could only see shadows on the wall." },
+            { start: 85, end: 140, text: "One prisoner escaped and saw the real world above." },
+            { start: 140, end: 195, text: "He returned to tell the others, but they did not believe him." },
+            { start: 195, end: 250, text: "Plato used this story to ask: what is real and what is only a shadow?" },
+            { start: 250, end: 300, text: "The story still makes people think about truth and knowledge today." },
+          ],
+        },
+        reading: {
+          title: "Plato's Cave and the Search for Truth",
+          paragraphs: [
+            "Plato was a Greek philosopher who lived about two thousand four hundred years ago. He told a famous story called the Allegory of the Cave to help people understand the difference between appearance and reality.",
+            "In the story, prisoners sit in a dark cave, chained so they can only face a wall. Behind them, a fire casts light, and objects pass in front of it. The prisoners see only shadows on the wall and believe those shadows are the whole world.",
+            "One day, a prisoner breaks free and climbs out of the cave. He sees the sun, the trees, and the real world. When he returns to tell the others, they laugh at him. They prefer the shadows they know to the truth they cannot see.",
+            "Plato's story asks a question that is still powerful today: how do we know what is real? Are we seeing the world as it truly is, or only shadows of something greater?",
+          ],
+          quiz: [
+            { question: { en: "What could the prisoners in the cave see?", fr: "Que pouvaient voir les prisonniers dans la caverne ?", zh: "洞穴里的囚犯能看到什么？" }, options: [{ en: "Shadows on the wall", fr: "Des ombres sur le mur", zh: "墙上的影子" }, { en: "The sun", fr: "Le soleil", zh: "太阳" }, { en: "The real world", fr: "Le monde réel", zh: "真实世界" }], answer: 0 },
+            { question: { en: "What happened when the escaped prisoner returned?", fr: "Que s'est-il passé quand le prisonnier évadé est revenu ?", zh: "逃跑的囚犯回来后发生了什么？" }, options: [{ en: "The others believed him", fr: "Les autres l'ont cru", zh: "其他人相信了他" }, { en: "The others laughed at him", fr: "Les autres se sont moqués de lui", zh: "其他人嘲笑他" }, { en: "The others left the cave", fr: "Les autres ont quitté la caverne", zh: "其他人离开了洞穴" }], answer: 1 },
+            { question: { en: "What question does Plato's story ask?", fr: "Quelle question pose l'histoire de Platon ?", zh: "柏拉图的故事提出了什么问题？" }, options: [{ en: "How do we know what is real?", fr: "Comment savoir ce qui est réel ?", zh: "我们如何知道什么是真实的？" }, { en: "How to build a house", fr: "Comment construire une maison", zh: "如何建房子" }, { en: "How to cook", fr: "Comment cuisiner", zh: "如何做饭" }], answer: 0 },
           ],
         },
       },
@@ -374,6 +399,34 @@ const ZH_TOPICS: Topic[] = [
           ],
         },
       },
+      {
+        video: {
+          title: "洞穴 的 比喻",
+          youtubeId: "1RWOpQXTltA",
+          duration: "5 分钟",
+          transcript: [
+            { start: 0, end: 45, text: "柏拉图 讲 了 一个 关于 洞穴 的 故事。" },
+            { start: 45, end: 100, text: "囚犯 们 只 能 看到 墙上 的 影子。" },
+            { start: 100, end: 160, text: "一个 人 逃 了 出来，看到 了 真正 的 世界。" },
+            { start: 160, end: 220, text: "他 回去 告诉 别人，但 没有 人 相信 他。" },
+            { start: 220, end: 300, text: "这个 故事 让 人 思考：什么 是 真实 的？" },
+          ],
+        },
+        reading: {
+          title: "柏拉图 的 洞穴",
+          paragraphs: [
+            "柏拉图 是 古希腊 的 哲学家。他 讲 了 一个 著名 的 故事，叫做 \"洞穴 的 比喻\"。",
+            "故事 里，一些 囚犯 被 关 在 一个 黑暗 的 洞穴 里。他们 只 能 看到 墙上 的 影子，以为 影子 就是 整个 世界。",
+            "有 一 天，一个 人 逃 了 出来。他 爬 出 洞穴，看到 了 太阳 和 真正 的 世界。",
+            "他 回去 告诉 别人，但 别人 不 相信 他。柏拉图 用 这个 故事 问：我们 看到 的 是 真实 的 吗？",
+          ],
+          quiz: [
+            { question: { en: "What could the prisoners see?", fr: "Que pouvaient voir les prisonniers ?", zh: "囚犯 们 能 看到 什么？" }, options: [{ en: "Shadows on the wall", fr: "Des ombres sur le mur", zh: "墙上 的 影子" }, { en: "The sun", fr: "Le soleil", zh: "太阳" }, { en: "The real world", fr: "Le monde réel", zh: "真实 世界" }], answer: 0 },
+            { question: { en: "What happened when the escaped prisoner returned?", fr: "Que se passa-t-il quand le prisonnier revint ?", zh: "逃跑 的 人 回来 后 怎么样 了？" }, options: [{ en: "Others believed him", fr: "Les autres l'ont cru", zh: "别人 相信 了 他" }, { en: "Others didn't believe him", fr: "Les autres ne l'ont pas cru", zh: "别人 不 相信 他" }, { en: "Others left the cave", fr: "Les autres ont quitté la caverne", zh: "别人 离开 了 洞穴" }], answer: 1 },
+            { question: { en: "What does Plato's story ask?", fr: "Que demande l'histoire de Platon ?", zh: "柏拉图 的 故事 问 什么？" }, options: [{ en: "What is real?", fr: "Qu'est-ce qui est réel ?", zh: "什么 是 真实 的？" }, { en: "How to cook", fr: "Comment cuisiner", zh: "怎么 做饭" }, { en: "How to build", fr: "Comment construire", zh: "怎么 建造" }], answer: 0 },
+          ],
+        },
+      },
     ],
   },
   {
@@ -570,19 +623,22 @@ export function getTopic(lang: LanguageCode, id: TopicId): Topic {
 }
 
 /**
- * Pick the lesson for a given topic + day. The VIDEO uses real YouTube captions
- * from videoLessons.generated.ts (cycling through the available clips); the
- * READING is the hand-authored 1-page document for that topic. Video and
- * reading cycle independently so combinations vary across the 90 days.
+ * Pick the lesson for a given topic + day. Video and reading use the SAME
+ * index so they always match: scraped video N pairs with lesson N's reading.
+ * If no scraped video exists at that index, the inline fallback video is used.
  */
 export function getLessonForDay(lang: LanguageCode, id: TopicId, day: number) {
   const topic = getTopic(lang, id);
-  const readingIdx = (day - 1) % topic.lessons.length;
-  const base = topic.lessons[readingIdx];
+  const idx = (day - 1) % topic.lessons.length;
+  const base = topic.lessons[idx];
 
   const videos = VIDEO_LESSONS[lang]?.[id] ?? [];
   const video =
-    videos.length > 0 ? videos[(day - 1) % videos.length] : base.video;
+    videos.length > idx
+      ? videos[idx]
+      : videos.length > 0
+        ? videos[idx % videos.length]
+        : base.video;
 
   return { video, reading: base.reading };
 }

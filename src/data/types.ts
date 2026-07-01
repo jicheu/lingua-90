@@ -121,6 +121,15 @@ export interface DayProgress {
   completedAt?: string;
 }
 
+/** A previously watched video, for the "My Videos" gallery. */
+export interface WatchedVideo {
+  youtubeId: string;
+  title: string;
+  topic: TopicId;
+  day: number;
+  watchedAt: string;
+}
+
 export interface AppState {
   /** Display name of the learner profile (shown on the profile picker). */
   name: string;
@@ -147,6 +156,8 @@ export interface AppState {
   sessionSize: number;
   /** Last topic the learner chose (pre-selects the same topic for new days). */
   lastTopic?: TopicId;
+  /** Videos the learner has watched and can replay from "My Videos". */
+  watchedVideos: WatchedVideo[];
   /** Wall-clock ms of the last local mutation; used for last-writer-wins sync. */
   updatedAt: number;
 }
