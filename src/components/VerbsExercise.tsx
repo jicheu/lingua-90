@@ -3,18 +3,52 @@ import { Check, ChevronRight, RefreshCw, Zap } from "lucide-react";
 import type { Store } from "../state/store";
 import type { VerbEntry, VerbExample } from "../data/types";
 import { VERBS_SESSION_SIZE, getVerbPool } from "../data/verbs";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 import { loc, type StringKey } from "../i18n/strings";
 import { Button, Card, ProgressBar, cn } from "./ui";
 
 interface Prompt {
   verb: VerbEntry;
   example: VerbExample;
+  /** Multiple-choice options (correct answer + distractors), used on mobile. */
+  options: string[];
+}
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/** Build 4 options for a prompt: the answer + 3 plausible distractors. */
+function buildOptions(verb: VerbEntry, answer: string, pool: VerbEntry[]): string[] {
+  const seen = new Set<string>([answer]);
+  const distractors: string[] = [];
+  // Prefer other conjugation forms of the same verb.
+  const sameVerbForms = Object.values(verb.conjugation);
+  // Then forms from other verbs, for variety when a verb has repeated forms.
+  const otherForms = shuffle(pool)
+    .filter((v) => v.infinitive !== verb.infinitive)
+    .flatMap((v) => Object.values(v.conjugation));
+
+  for (const form of [...shuffle(sameVerbForms), ...otherForms]) {
+    if (distractors.length >= 3) break;
+    if (!seen.has(form)) {
+      seen.add(form);
+      distractors.push(form);
+    }
+  }
+  return shuffle([answer, ...distractors]);
 }
 
 /**
  * Fill-in-the-blank drill over the growing pool of irregular verbs. Newer
  * verbs are weighted more heavily; each session tests ~5 prompts. Marks
- * `verbsDone` when the learner answers every prompt correctly.
+ * `verbsDone` when the learner answers every prompt correctly. On mobile the
+ * blank is answered by tapping one of several options instead of typing.
  */
 function buildSession(pool: VerbEntry[]): Prompt[] {
   if (pool.length === 0) return [];
@@ -32,7 +66,7 @@ function buildSession(pool: VerbEntry[]): Prompt[] {
     idx = Math.min(idx, weighted.length - 1);
     const verb = weighted[idx].verb;
     const example = verb.examples[Math.floor(Math.random() * verb.examples.length)];
-    prompts.push({ verb, example });
+    prompts.push({ verb, example, options: buildOptions(verb, example.answer, pool) });
   }
   return prompts;
 }
@@ -52,6 +86,7 @@ export function VerbsExercise({
 }) {
   const { state, t } = store;
   const done = store.getDay(day).verbsDone;
+  const isMobile = useMediaQuery("(max-width: 639px)");
   const pool = useMemo(
     () => getVerbPool(state.language, day),
     [state.language, day],
@@ -60,21 +95,29 @@ export function VerbsExercise({
   const [session, setSession] = useState<Prompt[]>(() => buildSession(pool));
   const [i, setI] = useState(0);
   const [input, setInput] = useState("");
+  const [selected, setSelected] = useState<string | null>(null);
   const [showAnswer, setShowAnswer] = useState<null | "correct" | "wrong">(null);
   const [right, setRight] = useState(0);
   const [wrong, setWrong] = useState(0);
 
-  function check() {
+  function check(value: string) {
     if (showAnswer) return;
-    const ok = normalise(input) === normalise(session[i].example.answer);
+    const ok = normalise(value) === normalise(session[i].example.answer);
     setShowAnswer(ok ? "correct" : "wrong");
     if (ok) setRight((r) => r + 1);
     else setWrong((w) => w + 1);
   }
 
+  function pick(option: string) {
+    if (showAnswer) return;
+    setSelected(option);
+    check(option);
+  }
+
   function next() {
     setShowAnswer(null);
     setInput("");
+    setSelected(null);
     setI((x) => x + 1);
   }
 
@@ -82,6 +125,7 @@ export function VerbsExercise({
     setSession(buildSession(pool));
     setI(0);
     setInput("");
+    setSelected(null);
     setShowAnswer(null);
     setRight(0);
     setWrong(0);
@@ -161,27 +205,69 @@ export function VerbsExercise({
 
         <div className="mt-5 text-lg leading-relaxed sm:text-xl">
           <span>{before}</span>
-          <input
-            autoFocus
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                if (showAnswer) next();
-                else check();
-              }
-            }}
-            disabled={showAnswer !== null}
-            placeholder="___"
-            className={cn(
-              "mx-1 inline-block w-40 rounded-lg border-b-2 bg-transparent px-2 py-1 text-center font-semibold outline-none transition",
-              showAnswer === "correct" && "border-emerald-500 text-emerald-700 dark:text-emerald-300",
-              showAnswer === "wrong" && "border-rose-500 text-rose-700 dark:text-rose-300",
-              !showAnswer && "border-indigo-400 focus:border-indigo-600",
-            )}
-          />
+          {isMobile ? (
+            <span
+              className={cn(
+                "mx-1 inline-block min-w-24 rounded-lg border-b-2 px-2 py-1 text-center font-semibold",
+                selected == null && "border-indigo-400 text-slate-400",
+                showAnswer === "correct" && "border-emerald-500 text-emerald-700 dark:text-emerald-300",
+                showAnswer === "wrong" && "border-rose-500 text-rose-700 dark:text-rose-300",
+              )}
+            >
+              {selected ?? "___"}
+            </span>
+          ) : (
+            <input
+              autoFocus
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  if (showAnswer) next();
+                  else check(input);
+                }
+              }}
+              disabled={showAnswer !== null}
+              placeholder="___"
+              className={cn(
+                "mx-1 inline-block w-40 rounded-lg border-b-2 bg-transparent px-2 py-1 text-center font-semibold outline-none transition",
+                showAnswer === "correct" && "border-emerald-500 text-emerald-700 dark:text-emerald-300",
+                showAnswer === "wrong" && "border-rose-500 text-rose-700 dark:text-rose-300",
+                !showAnswer && "border-indigo-400 focus:border-indigo-600",
+              )}
+            />
+          )}
           <span>{after}</span>
         </div>
+
+        {isMobile && (
+          <div className="mt-5 grid grid-cols-1 gap-2">
+            {prompt.options.map((opt) => {
+              const isAnswer = normalise(opt) === normalise(prompt.example.answer);
+              const isPicked = selected === opt;
+              return (
+                <button
+                  key={opt}
+                  onClick={() => pick(opt)}
+                  disabled={showAnswer !== null}
+                  className={cn(
+                    "rounded-xl border px-4 py-3 text-base font-medium transition",
+                    showAnswer === null &&
+                      "border-slate-200 hover:border-indigo-400 dark:border-slate-700",
+                    showAnswer !== null && isAnswer &&
+                      "border-emerald-500 bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300",
+                    showAnswer !== null && isPicked && !isAnswer &&
+                      "border-rose-500 bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300",
+                    showAnswer !== null && !isAnswer && !isPicked &&
+                      "border-slate-200 text-slate-400 dark:border-slate-800",
+                  )}
+                >
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {showAnswer === "wrong" && (
           <p className="mt-4 rounded-xl bg-rose-50 px-4 py-2 text-sm text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">
@@ -196,9 +282,11 @@ export function VerbsExercise({
 
         <div className="mt-5 flex justify-center gap-2">
           {showAnswer === null ? (
-            <Button onClick={check} disabled={input.trim().length === 0}>
-              {t("verbs.check")}
-            </Button>
+            !isMobile && (
+              <Button onClick={() => check(input)} disabled={input.trim().length === 0}>
+                {t("verbs.check")}
+              </Button>
+            )
           ) : (
             <Button variant="success" onClick={next}>
               {t("verbs.next")} <ChevronRight size={16} />
