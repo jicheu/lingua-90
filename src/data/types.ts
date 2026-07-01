@@ -76,6 +76,8 @@ export interface VideoLesson {
   duration: string;
   /** Creator / lesson author, for attribution (e.g. TED-Ed educator). */
   author?: string;
+  /** Broad theme label (philosophy / learning / communication). */
+  theme?: string;
   transcript: TranscriptLine[];
 }
 

@@ -1,5 +1,5 @@
 import type { LanguageCode, Topic, TopicId, TopicMeta } from "./types";
-import { VIDEO_LESSONS } from "./videoLessons.generated";
+import { VIDEO_POOL_EN, VIDEO_POOL_ZH } from "./videoLessons.generated";
 
 export const TOPIC_META: TopicMeta[] = [
   { id: "philosophy", label: "Philosophy", emoji: "🦉" },
@@ -623,22 +623,17 @@ export function getTopic(lang: LanguageCode, id: TopicId): Topic {
 }
 
 /**
- * Pick the lesson for a given topic + day. Video and reading use the SAME
- * index so they always match: scraped video N pairs with lesson N's reading.
- * If no scraped video exists at that index, the inline fallback video is used.
+ * Pick the lesson for a given topic + day. The VIDEO comes from a shared pool
+ * of real TED-Ed animations (decoupled from topic — day N always gets video N).
+ * The READING comes from the topic's hand-authored lessons, cycling by day.
  */
 export function getLessonForDay(lang: LanguageCode, id: TopicId, day: number) {
   const topic = getTopic(lang, id);
-  const idx = (day - 1) % topic.lessons.length;
-  const base = topic.lessons[idx];
+  const readingIdx = (day - 1) % topic.lessons.length;
+  const base = topic.lessons[readingIdx];
 
-  const videos = VIDEO_LESSONS[lang]?.[id] ?? [];
-  const video =
-    videos.length > idx
-      ? videos[idx]
-      : videos.length > 0
-        ? videos[idx % videos.length]
-        : base.video;
+  const pool = lang === "zh" ? VIDEO_POOL_ZH : VIDEO_POOL_EN;
+  const video = pool[(day - 1) % pool.length];
 
   return { video, reading: base.reading };
 }
