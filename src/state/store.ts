@@ -60,7 +60,7 @@ function daysBetween(aISO: string, bISO: string): number {
   return Math.round((b.getTime() - a.getTime()) / 86_400_000);
 }
 
-export type ExerciseKey = "vocabDone" | "videoDone" | "readingDone";
+export type ExerciseKey = "vocabDone" | "verbsDone" | "videoDone" | "readingDone";
 
 export interface Store {
   state: AppState;
@@ -160,6 +160,7 @@ export function useStore(profileId?: string | null): Store {
     (day: number): DayProgress =>
       state.progress[`${state.language}-${day}`] ?? {
         vocabDone: false,
+        verbsDone: false,
         videoDone: false,
         readingDone: false,
       },
@@ -169,7 +170,10 @@ export function useStore(profileId?: string | null): Store {
   const isDayComplete = useCallback(
     (day: number) => {
       const d = getDay(day);
-      return d.vocabDone && d.videoDone && d.readingDone;
+      // Migration: if verbsDone is missing (old state) but the other three
+      // are done, treat the day as complete so existing users don't regress.
+      const verbsOk = d.verbsDone ?? (d.vocabDone && d.videoDone && d.readingDone);
+      return d.vocabDone && verbsOk && d.videoDone && d.readingDone;
     },
     [getDay],
   );
@@ -186,7 +190,7 @@ export function useStore(profileId?: string | null): Store {
     () =>
       Array.from({ length: TOTAL_DAYS }, (_, i) => i + 1).filter((d) => {
         const p = state.progress[`${state.language}-${d}`];
-        return p && p.vocabDone && p.videoDone && p.readingDone;
+        return p && p.vocabDone && (p.verbsDone ?? true) && p.videoDone && p.readingDone;
       }).length,
     [state.progress, state.language],
   );
@@ -220,6 +224,7 @@ export function useStore(profileId?: string | null): Store {
         const key = `${s.language}-${day}`;
         const prev = s.progress[key] ?? {
           vocabDone: false,
+          verbsDone: false,
           videoDone: false,
           readingDone: false,
         };
@@ -257,6 +262,7 @@ export function useStore(profileId?: string | null): Store {
         const key = `${s.language}-${day}`;
         const prev = s.progress[key] ?? {
           vocabDone: false,
+          verbsDone: false,
           videoDone: false,
           readingDone: false,
         };
@@ -268,9 +274,9 @@ export function useStore(profileId?: string | null): Store {
         xp += XP_PER_EXERCISE;
 
         const nowComplete =
-          updated.vocabDone && updated.videoDone && updated.readingDone;
+          updated.vocabDone && (updated.verbsDone ?? true) && updated.videoDone && updated.readingDone;
         const wasComplete =
-          prev.vocabDone && prev.videoDone && prev.readingDone;
+          prev.vocabDone && (prev.verbsDone ?? true) && prev.videoDone && prev.readingDone;
 
         if (nowComplete && !wasComplete) {
           updated.completedAt = new Date().toISOString();
@@ -322,7 +328,7 @@ export function useStore(profileId?: string | null): Store {
           (_, i) => i + 1,
         ).filter((dd) => {
           const p = newProgress[`${s.language}-${dd}`];
-          return p && p.vocabDone && p.videoDone && p.readingDone;
+        return p && p.vocabDone && (p.verbsDone ?? true) && p.videoDone && p.readingDone;
         }).length;
         if (completed >= TOTAL_DAYS) badges.add("graduate");
 

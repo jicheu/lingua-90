@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, Check, Film, BookText, SpellCheck2 } from "lucide-react";
+import { ArrowLeft, Check, Film, BookText, SpellCheck2, Zap } from "lucide-react";
 import type { Store } from "../state/store";
 import type { TopicId } from "../data/types";
 import { TOPIC_META } from "../data/topicData";
 import type { StringKey } from "../i18n/strings";
 import { Card, cn } from "./ui";
 import { VocabExercise } from "./VocabExercise";
+import { VerbsExercise } from "./VerbsExercise";
 import { VideoExercise } from "./VideoExercise";
 import { ReadingExercise } from "./ReadingExercise";
 
-type Step = "vocab" | "video" | "reading";
+type Step = "vocab" | "verbs" | "video" | "reading";
 
 export function DayView({
   store,
@@ -38,6 +39,7 @@ export function DayView({
     done: boolean;
   }[] = [
     { key: "vocab", label: t("step.words"), icon: <SpellCheck2 size={17} />, done: progress.vocabDone },
+    { key: "verbs", label: t("step.verbs"), icon: <Zap size={17} />, done: progress.verbsDone },
     { key: "video", label: t("step.video"), icon: <Film size={17} />, done: progress.videoDone },
     { key: "reading", label: t("step.reading"), icon: <BookText size={17} />, done: progress.readingDone },
   ];
@@ -122,6 +124,13 @@ export function DayView({
           <div key={step} className="animate-fade-in">
             {step === "vocab" && (
               <VocabExercise
+                store={store}
+                day={day}
+                onComplete={() => setStep("verbs")}
+              />
+            )}
+            {step === "verbs" && (
+              <VerbsExercise
                 store={store}
                 day={day}
                 onComplete={() => setStep("video")}
