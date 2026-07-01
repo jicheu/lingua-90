@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Star, Volume2, X } from "lucide-react";
 import type { Store } from "../state/store";
 import type { LanguageCode } from "../data/types";
-import { lookupWord, type Gloss } from "../lib/dictionary";
+import { lookupWord, normalizeToken, type Gloss } from "../lib/dictionary";
 import { pronounce } from "../lib/speech";
 import { loc } from "../i18n/strings";
 import { toast } from "../lib/toast";
@@ -84,12 +84,26 @@ export function Translatable({
     e.stopPropagation();
     const gloss = lookupWord(state.language, token);
     pronounce(token.replace(/[^\p{L}\p{N}]/gu, ""), state.language);
+
     if (!gloss) {
+      // Word not in dictionary: save it with the term as a placeholder so it
+      // still lands in the practice deck and the learner gets the toast.
+      const norm = normalizeToken(token).toLowerCase();
+      if (norm && !store.isWordSaved(norm)) {
+        store.saveWord({
+          term: norm,
+          phonetic: "",
+          translation: { en: norm, fr: norm, zh: norm },
+          definition: { en: "", fr: "", zh: "" },
+          example: "",
+          category: source,
+        });
+        toast(store.t("toast.wordAdded"));
+      }
       setPop(null);
       return;
     }
-    // Auto-add any word the learner taps in a text/video to their deck, so it
-    // feeds the flashcard review.
+
     if (!store.isWordSaved(gloss.term)) {
       store.saveWord({
         term: gloss.term,
