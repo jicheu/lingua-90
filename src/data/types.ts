@@ -67,6 +67,34 @@ export interface QuizQuestion {
   answer: number;
 }
 
+/** Conjugation of an irregular verb across key tenses. */
+export interface VerbConjugation {
+  present: string;
+  past: string;
+  pastParticiple: string;
+  future: string;
+  presentPerfect: string;
+  pastPerfect: string;
+}
+
+/** A fill-in-the-blank example sentence for the verb quiz. */
+export interface VerbExample {
+  /** Sentence with "___" where the conjugated verb goes. */
+  sentence: string;
+  /** The correct conjugated form. */
+  answer: string;
+  /** Which tense is being tested (label). */
+  tense: string;
+}
+
+/** An irregular verb with its full conjugation and example sentences. */
+export interface VerbEntry {
+  infinitive: string;
+  translation: Localized;
+  conjugation: VerbConjugation;
+  examples: VerbExample[];
+}
+
 /** The video exercise: a real YouTube clip + synced transcript. */
 export interface VideoLesson {
   title: string;
@@ -115,11 +143,12 @@ export interface DayProgress {
   /** Topic the learner picked for this day. */
   topic?: TopicId;
   vocabDone: boolean;
+  verbsDone: boolean;
   videoDone: boolean;
   readingDone: boolean;
   /** Playback position (seconds) the learner reached in the video, to resume. */
   videoTime?: number;
-  /** ISO date string of completion (all three done). */
+  /** ISO date string of completion (all exercises done). */
   completedAt?: string;
 }
 
