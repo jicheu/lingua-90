@@ -34,6 +34,7 @@ const initialState: AppState = {
   badges: [],
   sessionSize: 10,
   watchedVideos: [],
+  videoExercises: {},
   updatedAt: 0,
 };
 
@@ -84,6 +85,7 @@ export interface Store {
   /** Record a flashcard answer (spaced-repetition update). */
   recordFlashcard: (term: string, known: boolean) => void;
   addWatchedVideo: (video: WatchedVideo) => void;
+  completeVideoExercise: (youtubeId: string) => void;
   /** Set how many cards a review session contains. */
   setSessionSize: (n: number) => void;
   exportState: () => string;
@@ -391,6 +393,16 @@ export function useStore(profileId?: string | null): Store {
     [commit],
   );
 
+  const completeVideoExercise = useCallback(
+    (youtubeId: string) =>
+      commit((s) => ({
+        ...s,
+        videoExercises: { ...(s.videoExercises ?? {}), [youtubeId]: true },
+        xp: s.xp + 20,
+      })),
+    [commit],
+  );
+
   const setSessionSize = useCallback(
     (n: number) =>
       commit((s) => ({
@@ -475,6 +487,7 @@ export function useStore(profileId?: string | null): Store {
     isWordSaved,
     recordFlashcard,
     addWatchedVideo,
+    completeVideoExercise,
     setSessionSize,
     exportState,
     importState,

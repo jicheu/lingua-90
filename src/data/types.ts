@@ -160,6 +160,8 @@ export interface AppState {
   lastTopic?: TopicId;
   /** Videos the learner has watched and can replay from "My Videos". */
   watchedVideos: WatchedVideo[];
+  /** Video exercises completed in My Videos (keyed by youtubeId). */
+  videoExercises: Record<string, boolean>;
   /** Wall-clock ms of the last local mutation; used for last-writer-wins sync. */
   updatedAt: number;
 }
